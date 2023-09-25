@@ -42,6 +42,52 @@ func main() {
         panic(err)
     }
 
+
+    // push data in db
+
+
+    result, err := neo4j.ExecuteQuery(ctx, driver,
+        "MERGE (p:Person {name: $name}) RETURN p",  
+        map[string]any{  
+            "name": "Alice",
+        }, neo4j.EagerResultTransformer,
+        neo4j.ExecuteQueryWithDatabase("neo4j"))  
+    if err != nil {
+        panic(err)
+    }
+    
+    fmt.Printf("Created %v nodes in %+v.\n",
+        result.Summary.Counters().NodesCreated(),
+        result.Summary.ResultAvailableAfter())
+
+    
+    // get values
+
+
+
+    result, err = neo4j.ExecuteQuery(ctx, driver,
+        "MATCH (p:Person) RETURN p.name AS name",
+        nil,
+        neo4j.EagerResultTransformer,
+        neo4j.ExecuteQueryWithDatabase("neo4j"))
+    if err != nil {
+        panic(err)
+    }
+    
+    // Loop through results and do something with them
+    for _, record := range result.Records {  
+        name, _ := record.Get("name")  // .Get() 2nd return is whether key is present
+        fmt.Println(name)
+        // or
+        // fmt.Println(record.AsMap())  // get Record as a map
+    }
+    
+    // Summary information  
+    fmt.Printf("The query `%v` returned %v records in %+v.\n",
+        result.Summary.Query().Text(), len(result.Records),
+        result.Summary.ResultAvailableAfter())
+
+
 	fmt.Println("no errors")
 
 
