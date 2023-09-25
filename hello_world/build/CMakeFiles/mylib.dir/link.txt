@@ -1,0 +1,2 @@
+/usr/bin/ar qc libmylib.a CMakeFiles/mylib.dir/difficult_func.cpp.o CMakeFiles/mylib.dir/wrapper_func.cpp.o
+/usr/bin/ranlib libmylib.a

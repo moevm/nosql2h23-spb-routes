@@ -1,0 +1,3 @@
+/home/drdrew/Projects/semester7/nrd/hello_world/build/CMakeFiles/Summator.dir
+/home/drdrew/Projects/semester7/nrd/hello_world/build/CMakeFiles/edit_cache.dir
+/home/drdrew/Projects/semester7/nrd/hello_world/build/CMakeFiles/rebuild_cache.dir
