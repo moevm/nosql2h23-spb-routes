@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html style="height: 100%;">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Основы Vue</title>
+        <link href='https://fonts.googleapis.com/css?family=Inter' rel='stylesheet'>
+        <link rel="stylesheet" href="theme.css" />
+    </head>
+
+    <body style="height: 100%;">
+        
+        
+
+        <div class="loginPage" id="app">
+            <div v-if="currentPage===pageType.SignIn" class="loginPageArea">
+                <div class="loginPageTitle">
+                    Sign In
+                </div>
+                <div class="loginPageInput">
+                    <div class="loginPageInputLabel">
+                        Email
+                    </div>
+                    <input class="loginPageInputTxt">
+                </div>
+
+                <div class="loginPageInput">
+                    <div class="loginPageInputLabel">
+                        Password
+                    </div>
+                    <input class="loginPageInputTxt">
+                </div>
+
+                <button class="loginPageControlBtn">Sign In</button>
+                <div class="loginPageHelpBtnsArea">
+                    <button class="loginPageHelpBtn" v-on:click="currentPage=pageType.RecoveryAccess">Forgot password</button>
+                    <button class="loginPageHelpBtn loginPageHelpBtnRight">Sign up</button>
+
+                </div>
+            </div>
+
+
+            <div v-if="currentPage===pageType.RecoveryAccess" class="loginPageArea">
+                <div class="loginPageTitle">
+                    Forgot password?
+                </div>
+                <div class="loginPageTitleTip">
+                    Enter Your email or phone number
+                </div>
+                
+                <div class="loginPageInput">
+                    <div class="loginPageInputLabel">
+                        Email
+                    </div>
+                    <input class="loginPageInputTxt">
+                </div>
+
+                <div class="loginPageInput">
+                    <div class="loginPageInputLabel">
+                        Phone number
+                    </div>
+                    <input class="loginPageInputTxt">
+                </div>
+
+                <button class="loginPageControlBtn" v-on:click="currentPage=pageType.RecoverySccessWithCode">Send Code</button>
+                <div class="loginPageHelpBtnsArea">
+                    <button class="loginPageHelpBtn" v-on:click="currentPage=pageType.SignIn">Sign in</button>
+                    <button class="loginPageHelpBtn loginPageHelpBtnRight">Sign up</button>
+
+                </div>
+            </div>
+
+
+            <div v-if="currentPage===pageType.RecoverySccessWithCode" class="loginPageArea">
+                <div class="loginPageTitle">
+                    Forgot password?
+                </div>
+                <div class="loginPageTitleTip">
+                    Enter Your email or phone number
+                </div>
+                
+                <div class="loginPageInput">
+                    <div class="loginPageInputLabel">
+                        Email
+                    </div>
+                    <input class="loginPageInputTxt">
+                </div>
+
+                <div class="loginPageInput">
+                    <div class="loginPageInputLabel">
+                        Phone number
+                    </div>
+                    <input class="loginPageInputTxt">
+                </div>
+
+                <button class="loginPageControlBtn">Send Code again</button>
+                <div class="loginPageInput">
+                    <div class="loginPageInputLabel">
+                        Enter recovery code
+                    </div>
+                    <input class="loginPageInputTxt">
+                </div>
+                <button class="loginPageControlBtn">Continue</button>
+
+                <div class="loginPageHelpBtnsArea">
+                    <button class="loginPageHelpBtn" v-on:click="currentPage=pageType.SignIn">Sign in</button>
+                    <button class="loginPageHelpBtn loginPageHelpBtnRight">Sign up</button>
+
+                </div>
+            </div>
+
+
+            <div v-if="currentPage===pageType.ForgotPassword" class="loginPageArea">
+                <div class="loginPageTitle">
+                    Sign In
+                </div>
+                <div class="loginPageInput">
+                    <div class="loginPageInputLabel">
+                        Email
+                    </div>
+                    <input class="loginPageInputTxt">
+                </div>
+
+                <div class="loginPageInput">
+                    <div class="loginPageInputLabel">
+                        Password
+                    </div>
+                    <input class="loginPageInputTxt">
+                </div>
+
+                <button class="loginPageControlBtn">Sign In</button>
+                <div class="loginPageHelpBtnsArea">
+                    <button class="loginPageHelpBtn">Forgot password</button>
+                    <button class="loginPageHelpBtn loginPageHelpBtnRight">Sign up</button>
+
+                </div>
+            </div>
+
+
+            <div v-if="currentPage===pageType.SignUp" class="loginPageArea">
+                <div class="loginPageTitle">
+                    Sign In
+                </div>
+                <div class="loginPageInput">
+                    <div class="loginPageInputLabel">
+                        Email
+                    </div>
+                    <input class="loginPageInputTxt">
+                </div>
+
+                <div class="loginPageInput">
+                    <div class="loginPageInputLabel">
+                        Password
+                    </div>
+                    <input class="loginPageInputTxt">
+                </div>
+
+                <button class="loginPageControlBtn">Sign In</button>
+                <div class="loginPageHelpBtnsArea">
+                    <button class="loginPageHelpBtn">Forgot password</button>
+                    <button class="loginPageHelpBtn loginPageHelpBtnRight">Sign up</button>
+
+                </div>
+            </div>
+
+        </div>
+
+        <!-- <script src="OpenLayers/OpenLayers.js"></script> -->
+        <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+        <script src="/login.js"></script>
+
+        <script>
+            // map = new OpenLayers.Map("demoMap");
+            // map.addLayer(new OpenLayers.Layer.OSM());
+            // map.zoomToMaxExtent();
+        </script>
+    </body>
+</html>

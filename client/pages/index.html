@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Основы Vue</title>
+        <link href='https://fonts.googleapis.com/css?family=Inter' rel='stylesheet'>
+        <link rel="stylesheet" href="theme.css" />
+    </head>
+
+    <body>
+        <div class="container pt-5" id="app">
+            <div class="Topbar">
+                <div class="NavigationBtnsArea">
+                    <button v-on:click="currentPage=0" v-bind:class="[currentPage==0 ? 'NavigationBtnActive':'NavigationBtn']" >
+                        <!-- class="NavigationBtn"v-class="{Active: currentPage==0}" -->
+                        What's new
+                    </button>
+                    <button v-on:click="currentPage=1" v-bind:class="[currentPage==1 ? 'NavigationBtnActive':'NavigationBtn']" >
+                        Find
+                    </button>
+                    <button v-on:click="currentPage=2" v-bind:class="[currentPage==2 ? 'NavigationBtnActive':'NavigationBtn']" >
+                        Route
+                    </button>
+                    <button v-on:click="currentPage=3" v-bind:class="[currentPage==3 ? 'NavigationBtnActive':'NavigationBtn']" >
+                        Add
+                    </button>
+                    <button v-on:click="currentPage=4" v-bind:class="[currentPage==4 ? 'NavigationBtnActive':'NavigationBtn']" >
+                        User
+                    </button>
+                </div>
+            </div>
+
+            <div class="main_pannel">
+                <div v-if="currentPage === 0">
+                    <div class="page">
+                        <div class="content_label">
+                            Routes and places you might like
+                            
+                        </div>
+                        
+                        <div class="content_block">
+                            <div class="newsList">
+                                <div class="leftColumn">
+                                    <div v-for="(item, index) in newsListLeft" v-bind:class="[index==0 ? 'newsShort':'news']">
+                                        
+                                        <!-- class="news" -->
+                                        <!-- {{ item.description }} -->
+                                        <!-- <div v-if="index==0">
+
+                                        </div> -->
+                                        <div v-if="item.type==='topic'" class="newsTopic">
+                                            <div class="topicTitle">
+                                                {{ item.title }}
+                                            </div>
+                                            <div class="topicDescription">
+                                                {{ item.description }}
+                                            </div>
+                                            <div class="">
+                                                <button>view all...</button>
+                                            </div>
+                                        </div>
+                                        <div v-if="item.type!=='topic'" v-bind:class="[index==0 ? 'newsNotTopicShort':'newsNotTopic']">
+                                            <div v-bind:class="[index==0 ? 'newsImagesViewShort':'newsImagesView']">
+                                                <div class="newsScrollContainer">
+                                                    <img src="/images/image1.jpg" alt="Cinque Terre">
+                                                    <img src="/images/image2.jpg" alt="Forest">
+                                                    <img src="/images/image3.jpg" alt="Northern Lights">
+                                                    <!-- <img src="/images/image1.jpg" alt="Mountains"> -->
+                                                </div>
+
+                                                    
+                                                
+                                            </div>
+                                            <div class="topicInfo">    
+                                                <div class="topicTitle">
+                                                    {{ item.title }}
+                                                </div>
+                                                <div class="topicDescription">
+                                                    {{ item.description }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="rightColumn">
+                                    <div v-for="(item, index) in newsListLeft" class="news">
+                                        
+                                        <!-- class="news" -->
+                                        <!-- {{ item.description }} -->
+                                        <!-- <div v-if="index==0">
+
+                                        </div> -->
+                                        <div v-if="item.type==='topic'" class="newsTopic">
+                                            <div class="topicTitle">
+                                                {{ item.title }}
+                                            </div>
+                                            <div class="topicDescription">
+                                                {{ item.description }}
+                                            </div>
+                                            <div class="">
+                                                <button>view all...</button>
+                                            </div>
+                                        </div>
+                                        <div v-if="item.type!=='topic'" class="newsNotTopic">
+                                            <div class="newsImagesView'">
+                                                <div class="newsScrollContainer">
+                                                    <img src="/images/image1.jpg" alt="Cinque Terre">
+                                                    <img src="/images/image2.jpg" alt="Forest">
+                                                    <img src="/images/image3.jpg" alt="Northern Lights">
+                                                    <!-- <img src="/images/image1.jpg" alt="Mountains"> -->
+                                                </div>
+
+                                                    
+                                                
+                                            </div>
+                                            <div class="topicInfo">    
+                                                <div class="topicTitle">
+                                                    {{ item.title }}
+                                                </div>
+                                                <div class="topicDescription">
+                                                    {{ item.description }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div v-else-if="currentPage === 1">
+                    
+                    <div class="content_label">
+                        Find the most suitable routes
+                    </div>
+                    <div class="content_block">
+                        <div class="parametersList">
+                            <div class="frame_with_inputs_label">
+                                Route parametres
+                            </div>
+                            <div class="single_line_inp">
+                                <div class="single_line_inp_txt">
+                                    parameter1
+                                </div>
+                                <input class="single_line_inp_edit">
+                            </div>
+                            <div class="single_line_inp">
+                                <div class="single_line_inp_txt">
+                                    parameter2
+                                </div>
+                                <input class="single_line_inp_edit">
+                            </div>
+                            <div class="single_line_inp">
+                                <div class="single_line_inp_txt">
+                                    parameter3
+                                </div>
+                                <input class="single_line_inp_edit">
+                            </div>
+                            <div class="single_line_inp">
+                                <div class="single_line_inp_txt">
+                                    parameter4
+                                </div>
+                                <input class="single_line_inp_edit">
+                            </div>
+                            <div class="single_line_inp">
+                                <div class="single_line_inp_txt">
+                                    parameter5
+                                </div>
+                                <input class="single_line_inp_edit">
+                            </div>
+                            <div class="frame_with_inputs_label">
+                                Preferences
+                            </div>
+                            <div class="single_line_inp">
+                                <div class="single_line_inp_txt">
+                                    parameter1
+                                </div>
+                                <input class="single_line_inp_edit">
+                            </div>
+                            <div class="single_line_inp">
+                                <div class="single_line_inp_txt">
+                                    parameter2
+                                </div>
+                                <input class="single_line_inp_edit">
+                            </div>
+                        </div>
+                        
+                        <div class="searchResultList">
+                            <div class="searchResultTitle">
+                                User routes
+                            </div>
+                            
+                            
+                            <div v-for="(item, index) in [1, 2, 3, 4, 5]" class="searchResult">
+                                <div class="imagesView">
+                                    <div class="scroll-container">
+                                        <img src="/images/image1.jpg" alt="Cinque Terre">
+                                        <img src="/images/image2.jpg" alt="Forest">
+                                        <img src="/images/image3.jpg" alt="Northern Lights">
+                                        <!-- <img src="/images/image1.jpg" alt="Mountains"> -->
+                                      </div>
+                                </div>
+                                <div class="searchResultDescription">
+                                    <div class="descriptionTitle">
+                                        Name {{item}}
+                                    </div>
+                                    <div class="durationResult">
+                                        Duration: 2h
+                                    </div>
+                                    <div class="statisticResult">
+                                        10% longer than the direct route
+                                        <br>
+                                        50% more interesting than the direct route
+                                    </div>
+                                    <div class="routeTags">
+
+                                    </div>
+                                    
+                                </div>
+                                <div class="controlBtbs">
+                                    <div class="funcBtns">
+                                        <button class="funcBtn">
+                                            Start
+                                        </button>
+                                    </div>
+                                    <div class="evaluativeBtns">
+                                        <button class="save_btn">
+                                            Like
+                                        </button>
+                                        <button class="cancel_btn">
+                                            Dislike
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="searchResultTitle">
+                                Autogeneration routes
+                            </div>
+                            <div v-for="(item, index) in [1, 2, 3, 4, 5]" class="searchResult">
+                                <div class="imagesView">
+                                    <div class="scroll-container">
+                                        <img src="/images/image1.jpg" alt="Cinque Terre">
+                                        <img src="/images/image2.jpg" alt="Forest">
+                                        <img src="/images/image3.jpg" alt="Northern Lights">
+                                        <!-- <img src="/images/image1.jpg" alt="Mountains"> -->
+                                      </div>
+                                </div>
+                                <div class="searchResultDescription">
+                                    <div class="descriptionTitle">
+                                        Name {{item}}
+                                    </div>
+                                    <div class="durationResult">
+                                        Duration: 2h
+                                    </div>
+                                    <div class="statisticResult">
+                                        10% longer than the direct route
+                                        <br>
+                                        50% more interesting than the direct route
+                                    </div>
+                                    <div class="routeTags">
+
+                                    </div>
+                                    
+                                </div>
+                                <div class="controlBtbs">
+                                    <div class="funcBtns">
+                                        <button class="funcBtn">
+                                            Start
+                                        </button>
+                                    </div>
+                                    <div class="evaluativeBtns">
+                                        <button class="save_btn">
+                                            Like
+                                        </button>
+                                        <button class="cancel_btn">
+                                            Dislike
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div v-else-if="currentPage === 2">
+                    <div class="content_label">
+                        Navigation along the selected route
+                    </div>
+                    <div class="content_block">
+                        <div class="targetList">
+                            <div class="searchResultTitle">
+                                Next target
+                            </div>
+                            <div v-for="(item, index) in [1]" class="target">
+                                <div class="imagesView">
+                                    <div class="scroll-container">
+                                        <img src="/images/image1.jpg" alt="Cinque Terre">
+                                        <img src="/images/image2.jpg" alt="Forest">
+                                        <img src="/images/image3.jpg" alt="Northern Lights">
+                                        <!-- <img src="/images/image1.jpg" alt="Mountains"> -->
+                                      </div>
+                                </div>
+                                <div class="targetDescription">
+                                    <div class="targetTitle">
+                                        Name {{item}}
+                                    </div>
+                                    <div class="targetAddress">
+                                        Address: Рубинштейна 34
+                                    </div>
+                                    
+                                </div>
+                                
+                            </div>
+                            <div class="searchResultTitle">
+                                Upcoming targets
+                            </div>
+                            <div v-for="(item, index) in [2, 3]" class="target">
+                                <div class="imagesView">
+                                    <div class="scroll-container">
+                                        <img src="/images/image1.jpg" alt="Cinque Terre">
+                                        <img src="/images/image2.jpg" alt="Forest">
+                                        <img src="/images/image3.jpg" alt="Northern Lights">
+                                        <!-- <img src="/images/image1.jpg" alt="Mountains"> -->
+                                      </div>
+                                </div>
+                                <div class="targetDescription">
+                                    <div class="targetTitle">
+                                        Name {{item}}
+                                    </div>
+                                    <div class="targetAddress">
+                                        Address: Рубинштейна 34
+                                    </div>
+                                    
+                                </div>
+                                
+                            </div>
+                            <div class="searchResultTitle">
+                                Passed targets
+                            </div>
+                            <div v-for="(item, index) in [4, 5]" class="target">
+                                <div class="imagesView">
+                                    <div class="scroll-container">
+                                        <img src="/images/image1.jpg" alt="Cinque Terre">
+                                        <img src="/images/image2.jpg" alt="Forest">
+                                        <img src="/images/image3.jpg" alt="Northern Lights">
+                                        <!-- <img src="/images/image1.jpg" alt="Mountains"> -->
+                                      </div>
+                                </div>
+                                <div class="targetDescription">
+                                    <div class="targetTitle">
+                                        Name {{item}}
+                                    </div>
+                                    <div class="targetAddress">
+                                        Address: Рубинштейна 34
+                                    </div>
+                                    
+                                </div>
+                                
+                            </div>
+                        </div>
+                        <div class="mapArea">
+                            <div class="mapHolder">
+                                <div id="demoMap" class="map"></div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+
+
+                </div>
+                <div v-else-if="currentPage === 3">
+                    
+                    
+                    <div class="placeOrRouteSwitcher">
+                        <button v-on:click="addPlace=1; addRoute=0" v-bind:class="[addPlace ? 'SwitchBtnActive':'SwitchBtn']">
+                            Place
+                        </button>
+                        <button v-on:click="addPlace=0; addRoute=1" v-bind:class="[addRoute ? 'SwitchBtnActive':'SwitchBtn']">
+                            Route
+                        </button>
+                    </div>
+                    <div v-if="addPlace">  
+                        <div class="content_label">
+                            Add new place
+                        </div>
+                        <div class="content_block">
+                            
+                            <div class="parametersList">
+                                <div class="frame_with_inputs_label">
+                                    Route parametres
+                                </div>
+                                <div class="single_line_inp">
+                                    <div class="single_line_inp_txt">
+                                        parameter1
+                                    </div>
+                                    <input class="single_line_inp_edit">
+                                </div>
+                                <div class="single_line_inp">
+                                    <div class="single_line_inp_txt">
+                                        parameter2
+                                    </div>
+                                    <input class="single_line_inp_edit">
+                                </div>
+                                <div class="single_line_inp">
+                                    <div class="single_line_inp_txt">
+                                        parameter3
+                                    </div>
+                                    <input class="single_line_inp_edit">
+                                </div>
+                                <div class="single_line_inp">
+                                    <div class="single_line_inp_txt">
+                                        parameter4
+                                    </div>
+                                    <input class="single_line_inp_edit">
+                                </div>
+                                <div class="single_line_inp">
+                                    <div class="single_line_inp_txt">
+                                        parameter5
+                                    </div>
+                                    <input class="single_line_inp_edit">
+                                </div>
+                                <div class="frame_with_inputs_label">
+                                    Preferences
+                                </div>
+                                <div class="single_line_inp">
+                                    <div class="single_line_inp_txt">
+                                        parameter1
+                                    </div>
+                                    <input class="single_line_inp_edit">
+                                </div>
+                                <div class="single_line_inp">
+                                    <div class="single_line_inp_txt">
+                                        parameter2
+                                    </div>
+                                    <input class="single_line_inp_edit">
+                                </div>
+                            </div>
+                            <div class="addNewPlaceMap">
+                                <div class="mapHolder">
+                                    <div id="demoMap" class="map"></div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div v-if="addRoute">
+                        <div class="content_label">
+                            Add new route
+                        </div>
+                        <div class="content_block">
+                            
+                            <div class="parametersList">
+                                <div class="frame_with_inputs_label">
+                                    Route parametres
+                                </div>
+                                <div class="single_line_inp">
+                                    <div class="single_line_inp_txt">
+                                        parameter1
+                                    </div>
+                                    <input class="single_line_inp_edit">
+                                </div>
+                                <div class="single_line_inp">
+                                    <div class="single_line_inp_txt">
+                                        parameter2
+                                    </div>
+                                    <input class="single_line_inp_edit">
+                                </div>
+                                <div class="single_line_inp">
+                                    <div class="single_line_inp_txt">
+                                        parameter3
+                                    </div>
+                                    <input class="single_line_inp_edit">
+                                </div>
+                                <div class="single_line_inp">
+                                    <div class="single_line_inp_txt">
+                                        parameter4
+                                    </div>
+                                    <input class="single_line_inp_edit">
+                                </div>
+                                <div class="single_line_inp">
+                                    <div class="single_line_inp_txt">
+                                        parameter5
+                                    </div>
+                                    <input class="single_line_inp_edit">
+                                </div>
+                                <div class="frame_with_inputs_label">
+                                    Preferences
+                                </div>
+                                <div class="single_line_inp">
+                                    <div class="single_line_inp_txt">
+                                        parameter1
+                                    </div>
+                                    <input class="single_line_inp_edit">
+                                </div>
+                                <div class="single_line_inp">
+                                    <div class="single_line_inp_txt">
+                                        parameter2
+                                    </div>
+                                    <input class="single_line_inp_edit">
+                                </div>
+                            </div>
+                            <div class="addNewRouteMap">
+                                <div class="mapHolder">
+                                    <div id="demoMap" class="map"></div>
+                                </div>
+                            </div>
+                            
+                            
+                        </div>
+                    </div>
+                </div>
+                <div v-else-if="currentPage === 4">
+                    <div class="profile">
+                            <div class="profileImageArea">
+                                <img src="/images/image1.jpg" alt="Cinque Terre" class="profileImage">
+                            </div>
+                            <div class="profileInfo">
+                                <div class="profileUsername">
+                                    John Doe
+                                </div>
+                                <div class="profileAddress">
+                                    Saint Petersburg, RU
+                                </div>
+                                <div>
+                                    <button class="editProfileBtn">Edit profile</button>
+                                </div>
+                            </div>
+                        
+                    </div>
+                    <div class="content_label">
+                        My posts
+                    </div>
+                    <div class="content_block">
+                        <div class="leftColumn">
+                            <div v-for="(item, index) in newsListLeft" v-bind:class="[index==0 ? 'newsShort':'news']">
+                                
+                                <!-- class="news" -->
+                                <!-- {{ item.description }} -->
+                                <!-- <div v-if="index==0">
+
+                                </div> -->
+                                <div v-if="item.type==='topic'" class="newsTopic">
+                                    <div class="topicTitle">
+                                        {{ item.title }}
+                                    </div>
+                                    <div class="topicDescription">
+                                        {{ item.description }}
+                                    </div>
+                                    <div class="">
+                                        <button>view all...</button>
+                                    </div>
+                                </div>
+                                <div v-if="item.type!=='topic'" v-bind:class="[index==0 ? 'newsNotTopicShort':'newsNotTopic']">
+                                    <div v-bind:class="[index==0 ? 'newsImagesViewShort':'newsImagesView']">
+                                        <div class="newsScrollContainer">
+                                            <img src="/images/image1.jpg" alt="Cinque Terre">
+                                            <img src="/images/image2.jpg" alt="Forest">
+                                            <img src="/images/image3.jpg" alt="Northern Lights">
+                                            <!-- <img src="/images/image1.jpg" alt="Mountains"> -->
+                                        </div>
+
+                                            
+                                        
+                                    </div>
+                                    <div class="topicInfo">    
+                                        <div class="topicTitle">
+                                            {{ item.title }}
+                                        </div>
+                                        <div class="topicDescription">
+                                            {{ item.description }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="rightColumn">
+                            <div v-for="(item, index) in newsListLeft" class="news">
+                                
+                                <!-- class="news" -->
+                                <!-- {{ item.description }} -->
+                                <!-- <div v-if="index==0">
+
+                                </div> -->
+                                <div v-if="item.type==='topic'" class="newsTopic">
+                                    <div class="topicTitle">
+                                        {{ item.title }}
+                                    </div>
+                                    <div class="topicDescription">
+                                        {{ item.description }}
+                                    </div>
+                                    <div class="">
+                                        <button>view all...</button>
+                                    </div>
+                                </div>
+                                <div v-if="item.type!=='topic'" class="newsNotTopic">
+                                    <div class="newsImagesView'">
+                                        <div class="newsScrollContainer">
+                                            <img src="/images/image1.jpg" alt="Cinque Terre">
+                                            <img src="/images/image2.jpg" alt="Forest">
+                                            <img src="/images/image3.jpg" alt="Northern Lights">
+                                            <!-- <img src="/images/image1.jpg" alt="Mountains"> -->
+                                        </div>
+
+                                            
+                                        
+                                    </div>
+                                    <div class="topicInfo">    
+                                        <div class="topicTitle">
+                                            {{ item.title }}
+                                        </div>
+                                        <div class="topicDescription">
+                                            {{ item.description }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                            
+                        
+                    </div>
+                    
+                    
+                </div>
+            </div>
+
+        </div>
+        <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+        <script src="app.js"></script>
+
+
+        <script src="OpenLayers/OpenLayers.js"></script>
+
+
+        <script>
+            // map = new OpenLayers.Map("demoMap");
+            // map.addLayer(new OpenLayers.Layer.OSM());
+            // map.zoomToMaxExtent();
+        </script>
+    </body>
+</html>
