@@ -121,16 +121,10 @@ const App = {
         startMap() {
             console.log("map called", document.getElementById("demoMap"));
             
-            // console.log("current page = " this.currentPage);
-            // while(document.getElementById("demoMap") === null) {
-            //     console.log("rendering");
-            // }
-            // map = new OpenLayers.Map("demoMap");
-            // map.addLayer(new OpenLayers.Layer.OSM());
-            // map.zoomToMaxExtent();
-            var lat            = 47.35387;
-            var lon            = 8.43609;
-            var zoom           = 18;
+            
+            var lat            = 59.9275;
+            var lon            = 30.3346;
+            var zoom           = 12;
 
             var fromProjection = new OpenLayers.Projection("EPSG:4326");   // Transform from WGS 1984
             var toProjection   = new OpenLayers.Projection("EPSG:900913"); // to Spherical Mercator Projection
@@ -140,11 +134,57 @@ const App = {
             var mapnik         = new OpenLayers.Layer.OSM();
             map.addLayer(mapnik);
 
-            var markers = new OpenLayers.Layer.Markers( "Markers" );
-            map.addLayer(markers);
-            markers.addMarker(new OpenLayers.Marker(position));
+            // var markers = new OpenLayers.Layer.Markers( "Markers" );
+            // map.addLayer(markers);
+            // markers.addMarker(new OpenLayers.Marker(position));
+            var markers = new OpenLayers.Layer.Markers("Markers");
+
+            listd = [//30.3648853,59.9306793
+                {Longitude : 30.3648853,
+                    Latitude : 59.9306793   ,
+                    id : 0,
+                }, //30.4102421,59.9239807
+                {Longitude : 30.4102421,
+                    Latitude : 59.9239807,
+                    id : 1,
+                },
+            ]
+            console.log(listd.length);
+            for(var i = 0; i < listd.length; i++)
+            { 
+                (function(i){
+                     var lonLat = new OpenLayers.LonLat(listd[i].Longitude, listd[i].Latitude).transform( fromProjection, toProjection);
+                    console.log(lonLat);
+                    
+                    //  var title = listd[i].Title;
+                    //  var iconPath = listd[i].IconPath;
+                    //  var size = new OpenLayers.Size(15, 22);
+                    //  var offset = new OpenLayers.Pixel(-(size.w / 2), -size.h);
+            
+                    //  var icon = new OpenLayers.Icon(iconPath, size, offset);
+                     var marker = new OpenLayers.Marker(lonLat); //, icon.clone()
+                    marker.id = listd[i].id
+                    // console.log(marker);
+                     markers.addMarker(marker);
+                    //  console.log(markers);
+                    
+                    marker.events.register("click", marker, function(e){
+                    //     // popup = new OpenLayers.Popup.FramedCloud("chicken",
+                    //     //     marker.lonlat,
+                    //     //     new OpenLayers.Size(200, 200),
+                    //     //     title,
+                    //     //     null, false );
+                    //     //   map.addPopup(popup);
+                        console.log(marker.id);
+                     });
+                })(i);
+             } 
+             map.addLayer(markers);
+            //  console.log(map);
+
 
             map.setCenter(position, zoom);
+            console.log("getExtent = ", map.getExtent().transform(toProjection, fromProjection));
         },
 
         logout () {

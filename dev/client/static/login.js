@@ -15,7 +15,18 @@ const App = {
             
             email : "",
             password : "",
+            
+            firstName : "",
+            lastName: "",
+            address: "",
+            phone: "",
+            // : "",
+
+            repeatPassword : "",
+
            
+
+            passwordsAreEq : false,
             
         }
     },
@@ -69,6 +80,45 @@ const App = {
                   }).then((response) => {window.location.href = response.url;});//window.location.replace(response));// console.log(response));
             });
         },
+
+        tryToCreateNewUser () {
+
+
+            fetch("/auth/create/user", 
+            {
+            method: "POST",
+            body: JSON.stringify({ 
+                email: this.email,
+                password: this.password,
+                firstName: this.firstName,
+                lastName: this.lastName,
+                phone: this.phone,
+                address: this.address,
+            }),
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+                // Authorization: 'Bearer '+ localStorage.access_token ,
+            }
+            }
+            ).then((response) => response.json()).then((json) => {//localStorage.access_token = json.access_token; 
+                console.log(json);
+                if (json.isUserCreated) {
+                    // console.log("success");
+                    this.tryToLogin();
+                } else {
+                    console.log('fail');
+                }
+                // window.location.href = '/';
+                // fetch('/redirect_to_main_page', {
+                //     method: 'GET',
+                //     redirect: 'follow',
+                //     headers: {
+                //       Authorization: 'Bearer '+ localStorage.access_token ,  
+                //     }
+                //   }).then((response) => {window.location.href = response.url;});//window.location.replace(response));// console.log(response));
+            });
+
+        }
 
 
         

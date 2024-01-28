@@ -704,6 +704,11 @@ div.scroll-container {
     margin-top: 3px;
 }
 
+.warning {
+    color: #FF0000;
+    font-weight: lighter;
+}
+
 .frame_with_inputs {
     /* position: fixed; */
     display: flex;

@@ -34,7 +34,7 @@
                 <button class="loginPageControlBtn" v-on:click="tryToLogin">Sign In</button>
                 <div class="loginPageHelpBtnsArea">
                     <button class="loginPageHelpBtn" v-on:click="currentPage=pageType.RecoveryAccess">Forgot password</button>
-                    <button class="loginPageHelpBtn loginPageHelpBtnRight">Sign up</button>
+                    <button class="loginPageHelpBtn loginPageHelpBtnRight" v-on:click="currentPage=pageType.SignUp">Sign up</button>
 
                 </div>
             </div>
@@ -139,26 +139,59 @@
 
             <div v-if="currentPage===pageType.SignUp" class="loginPageArea">
                 <div class="loginPageTitle">
-                    Sign In
+                    Sign Up
                 </div>
                 <div class="loginPageInput">
                     <div class="loginPageInputLabel">
-                        Email
+                        First name
                     </div>
-                    <input class="loginPageInputTxt">
+                    <input class="loginPageInputTxt" v-model="firstName">
+                </div>
+                <div class="loginPageInput">
+                    <div class="loginPageInputLabel">
+                        Last name
+                    </div>
+                    <input class="loginPageInputTxt" v-model="lastName">
+                </div>
+                <div class="loginPageInput">
+                    <div class="loginPageInputLabel">
+                        Enter Your Email 
+                    </div>
+                    <input class="loginPageInputTxt" v-model="email">
+                </div>
+                <div class="loginPageInput">
+                    <div class="loginPageInputLabel">
+                        Enter Your phone number
+                    </div>
+                    <input class="loginPageInputTxt" v-model="phone">
+                </div>
+                <div class="loginPageInput">
+                    <div class="loginPageInputLabel">
+                        Enter Your address
+                    </div>
+                    <input class="loginPageInputTxt" v-model="address">
                 </div>
 
                 <div class="loginPageInput">
                     <div class="loginPageInputLabel">
-                        Password
+                        Create a password
                     </div>
-                    <input class="loginPageInputTxt">
+                    <input class="loginPageInputTxt" v-model="password">
+                </div>
+                <div class="loginPageInput">
+                    <div class="loginPageInputLabel">
+                        Repeat password
+                    </div>
+                    <input class="loginPageInputTxt" v-model="repeatPassword">
+                    <div class="loginPageInputLabel warning" v-if="password !== repeatPassword">
+                        Password mismatch
+                    </div>
                 </div>
 
-                <button class="loginPageControlBtn">Sign In</button>
+                <button class="loginPageControlBtn" v-on:click="tryToCreateNewUser">Sign In</button>
                 <div class="loginPageHelpBtnsArea">
-                    <button class="loginPageHelpBtn">Forgot password</button>
-                    <button class="loginPageHelpBtn loginPageHelpBtnRight">Sign up</button>
+                    <button class="loginPageHelpBtn" v-on:click="currentPage=pageType.RecoveryAccess">Forgot password</button>
+                    <button class="loginPageHelpBtn loginPageHelpBtnRight" v-on:click="currentPage=pageType.SignIn">Sign ip</button>
 
                 </div>
             </div>
