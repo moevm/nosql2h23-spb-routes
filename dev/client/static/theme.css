@@ -230,7 +230,56 @@ p{
     margin-right: 60%;
     margin-left: 10%;
     position: fixed;
+
 }
+
+.editRouteBlock {
+    width: 35%;
+    min-width: 200px;
+    margin-right: 65%;
+    margin-top: 2%;
+    height: 100%;
+    background-color: #F5F5F5;  
+    border-radius: 15px;
+    /* padding: 2px; */
+    /* margin-right: 60%; */
+    /* margin-left: 10%; */
+}
+
+.editRouteOnePoint {
+    /* padding: 2px; */
+    background-color: #e6e6e6;
+    width: 96%;
+    /* background-color: #F5F5F5; */
+    border-radius: 15px;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin: 2%;
+
+    margin-bottom: 7px;
+}
+
+.editRouteOnePointDescription{
+    width: 60%;
+    background-color: #ffffff;
+    border-radius: 10px;
+    height: 15vh;
+    margin: 2px;
+}
+
+.editRouteOnePointImagesView
+{
+    width: 40%;
+    height: 100%;
+    border-radius: 10px;
+    margin: 2px;
+    margin-bottom: 2px;
+}
+
+
 
 .searchResultList {
     width: 70%;
@@ -370,10 +419,21 @@ div.scroll-container {
     font-weight: lighter;
     font-size: 20px;
     margin: 8px;
+    overflow-y: hidden;
+    height: 40%;
 }
 .targetAddress {
     font-size: 15px;
     margin: 8px;
+}
+
+.BlockWithControlButtons {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 7px;
+
 }
 
 .mapArea {
@@ -465,13 +525,36 @@ div.scroll-container {
     min-width: 200px;
     margin-left: 35%;
     margin-top: 2%;
-    height: 60%;
+    height: 70%;
     background-color: #F5F5F5;  
     border-radius: 20px;
-    padding: 2px;
+    /* padding: 2px; */
     /* margin-right: 60%;
     margin-left: 10%; */
     position: fixed;
+}
+
+.addNewRoutemapHolder {
+    width: 96%;
+    height: 69%;
+    border-radius: 15px;
+    border-color: #FFFFFF;
+    background-color: #FFFFFF;  
+    margin: 2%;
+
+}
+
+.underAddNewRouteMapBox {
+    width: 60%;
+    
+    margin :0;
+    padding: 0;
+    margin-left: 1%;
+}
+
+.BlockWithAddBtn {
+    width:50%;
+    margin: 8px;
 }
 
 .profile {
@@ -708,6 +791,46 @@ div.scroll-container {
     color: #FF0000;
     font-weight: lighter;
 }
+
+.editingRouteListPlaceholder {
+    background-color: #FFFFFF;
+    border-radius: 15px;
+    margin: 5px;
+} 
+
+.editingRouteListTipHeader {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center; 
+    font-weight: bold;
+    height: 50px;
+    width: 100%;
+}
+
+.editingRouteListTip {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center; 
+    font-weight: lighter;
+    height: 50px;
+    width: 100%;
+
+}
+
+.multilineInput {
+    background-color: #FFFFFF;
+    /* padding: 3px;
+    margin: 5px; */
+    font-family: 'Inter';
+    border: none;
+    border-radius: 5px;
+    font-size: smaller;
+    width: 100%;
+    height: 100px;
+}
+
 
 .frame_with_inputs {
     /* position: fixed; */
