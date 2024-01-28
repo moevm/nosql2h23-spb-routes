@@ -453,59 +453,85 @@
                         </div>
                         <div class="content_block">
                             
-                            <div class="parametersList">
+                            <div class="editRouteBlock">
                                 <div class="frame_with_inputs_label">
-                                    Route parametres
+                                    List of places
                                 </div>
-                                <div class="single_line_inp">
-                                    <div class="single_line_inp_txt">
-                                        parameter1
+                                <div v-if="editingRouteList.length === 0" class="editingRouteListPlaceholder">
+                                    <div class="editingRouteListTipHeader">
+                                        Time to create :)
                                     </div>
-                                    <input class="single_line_inp_edit">
+                                    <div class="editingRouteListTip">
+                                        Just select interesting places on map
+                                    </div>
                                 </div>
-                                <div class="single_line_inp">
-                                    <div class="single_line_inp_txt">
-                                        parameter2
+                                <div v-for="(item, index) in editingRouteList" class="editRouteOnePoint">
+                                    <!-- <div class="target">     -->
+                                    <div class="editRouteOnePointImagesView">
+                                        <div class="scroll-container">
+                                            <img src="/images/image1.jpg" alt="Cinque Terre">
+                                            <img src="/images/image2.jpg" alt="Forest">
+                                            <img src="/images/image3.jpg" alt="Northern Lights">
+                                            <!-- <img src="/images/image1.jpg" alt="Mountains"> -->
+                                        </div>
                                     </div>
-                                    <input class="single_line_inp_edit">
-                                </div>
-                                <div class="single_line_inp">
-                                    <div class="single_line_inp_txt">
-                                        parameter3
+                                    <div class="targetDescription editRouteOnePointDescription" >
+                                        <div class="targetTitle">
+                                            {{item.name}}
+                                        </div>
+                                        <div class="targetAddress ">
+                                            Address: Рубинштейна 34
+                                        </div>
+                                        <div class="BlockWithControlButtons">
+                                            <button class="funcBtn" v-on:click="editingRouteList.push(selectedOnRouteEditMapSight);selectedOnRouteEditMapSight=''">Add to route</button>
+                                        </div>
+                                        
                                     </div>
-                                    <input class="single_line_inp_edit">
-                                </div>
-                                <div class="single_line_inp">
-                                    <div class="single_line_inp_txt">
-                                        parameter4
-                                    </div>
-                                    <input class="single_line_inp_edit">
-                                </div>
-                                <div class="single_line_inp">
-                                    <div class="single_line_inp_txt">
-                                        parameter5
-                                    </div>
-                                    <input class="single_line_inp_edit">
+                                    <!-- </div> -->
                                 </div>
                                 <div class="frame_with_inputs_label">
-                                    Preferences
+                                    Description
                                 </div>
                                 <div class="single_line_inp">
                                     <div class="single_line_inp_txt">
-                                        parameter1
+                                        Name
                                     </div>
-                                    <input class="single_line_inp_edit">
+                                    <input class="single_line_inp_edit" placeholder="Name">
                                 </div>
                                 <div class="single_line_inp">
-                                    <div class="single_line_inp_txt">
-                                        parameter2
-                                    </div>
-                                    <input class="single_line_inp_edit">
+                                    
+                                    <textarea  type="text" class="multilineInput" placeholder="Write description here"></textarea>
                                 </div>
                             </div>
                             <div class="addNewRouteMap">
-                                <div class="mapHolder">
+                                <div class="addNewRoutemapHolder">
                                     <div id="demoMap" class="map"></div>
+                                </div>
+                                <div class="underAddNewRouteMapBox">
+                                    <div class="selectedPointOnMap" v-if='selectedOnRouteEditMapSight !== ""' >
+                                        <div class="editRouteOnePoint">
+                                            <!-- <div class="target">     -->
+                                            <div class="editRouteOnePointImagesView">
+                                                <div class="scroll-container">
+                                                    <img src="/images/image1.jpg" alt="Cinque Terre">
+                                                    <img src="/images/image2.jpg" alt="Forest">
+                                                    <img src="/images/image3.jpg" alt="Northern Lights">
+                                                    <!-- <img src="/images/image1.jpg" alt="Mountains"> -->
+                                                </div>
+                                            </div>
+                                            <div class="targetDescription editRouteOnePointDescription" >
+                                                <div class="targetTitle">
+                                                    {{ selectedOnRouteEditMapSight.name }}
+                                                </div>
+                                                <div class="targetAddress ">
+                                                    Address: Рубинштейна 34
+                                                </div>
+                                                <div class="BlockWithAddBtn">
+                                                    <button class="funcBtn" v-on:click="editingRouteList.push(selectedOnRouteEditMapSight);selectedOnRouteEditMapSight=''">Add to route</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             
