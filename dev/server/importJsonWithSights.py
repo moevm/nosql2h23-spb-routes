@@ -18,7 +18,7 @@ res = conn.getresponse()
 data = res.read()
 
 
-f = open("data.json", "a", encoding="utf-8")
+f = open("data.json", "a")
 f.write(data.decode("utf-8"))
 f.close()
 

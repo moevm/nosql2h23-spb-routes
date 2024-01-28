@@ -13,3 +13,18 @@ class ServerLogic:
     def createUser(self, user:dict):
         return self.__dataBaseDriver.createUser(user)
     
+
+    def getSightInArea(self, area):
+        bbox = {'latMin' : area['extent']['bottom'],
+            'latMax' : area['extent']['top'],
+            'lonMin' : area['extent']['left'],
+            'lonMax' : area['extent']['right']}
+        
+        listOfSightsIdsAndPos = self.__dataBaseDriver.getSightsInBbox(bbox)
+        listOfSightsIdsAndPos = [{'id' : i[0],
+                                  'lat' : i[1],
+                                  'lon' : i[2]} for i in listOfSightsIdsAndPos]
+        return listOfSightsIdsAndPos
+    
+    def getSightById(self, id):
+        return self.__dataBaseDriver.getSightById(id)

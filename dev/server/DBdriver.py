@@ -109,6 +109,42 @@ class DataBaseDriver:
             # greeting = session.execute_write(self._create_and_return_greeting, message)
             nodeName = session.execute_write(self._create_User, newUser)
             return nodeName
+
+
+    @staticmethod  
+    def _get_sights_in_bbox(tx, bbox):
+        query = "match (a:Sight) where a.lat > $latMin \
+                                    and a.lat < $latMax \
+                                    and a.lon > $lonMin \
+                                    and a.lon < $lonMax \
+                                    return a.id, a.lat, a.lon"
+        result = tx.run(query,
+                        latMin = bbox['latMin'],
+                        latMax = bbox['latMax'],
+                        lonMin = bbox['lonMin'],
+                        lonMax = bbox['lonMax'])
+        values = [record.values() for record in result]
+        return values
+        # return result
+
+    def getSightsInBbox(self, bbox):
+        with self.driver.session() as session:
+            values = session.execute_read(self._get_sights_in_bbox, bbox)
+            return values
+        
+
+    @staticmethod  
+    def _get_sight_by_id(tx, id):
+        query = "match (a:Sight) where a.id = '"+ str(id) +"' return a"
+        result = tx.run(query)
+        # values = [record.values() for record in result]
+        # return values
+        return result.single().value()._properties
+
+    def getSightById(self, id):
+        with self.driver.session() as session:
+            values = session.execute_read(self._get_sight_by_id, id)
+            return values
         
 
 
@@ -162,13 +198,11 @@ if __name__ == "__main__":
     f.close()
 
     # print(type(loader.getUserByEmail('zlobinandrey0707@gmail.com')))
-    user = {'email' : 'email',
-            'password' : 'password',
-            'firstName' : 'firstName',
-            'lastName' : 'lastName',
-            'phone' : 'phone',
-            'address' : 'address'}
-    print (loader.createUser(user))
+    bbox = {'latMin' : 59.92991679946971,
+            'latMax' : 59.931309097050196,
+            'lonMin' : 30.361646111301685,
+            'lonMax' : 30.368458922200304}
+    print (loader.getSightById(7099552))
 
 
 
