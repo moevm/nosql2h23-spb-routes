@@ -66,6 +66,50 @@ class DataBaseDriver:
                             totalResponse = str(route))
         record = result.single()
         return record
+    
+    def createSightRoute(self, startNode, finishNode, route):
+        with self.driver.session() as session:
+            # greeting = session.execute_write(self._create_and_return_greeting, message)
+            nodeName = session.execute_write(self._create_route_between_sights_return_name, startNode, finishNode, route)
+            return nodeName
+
+    @staticmethod  
+    def _get_user_by_email(tx, email):
+        query = "match (a:User) where a.email = '"+ email +"' return a"
+        result = tx.run(query)
+        # values = [record.values() for record in result]
+        # return values
+        return result.single().value()._properties
+
+    def getUserByEmail(self, email):
+        with self.driver.session() as session:
+            values = session.execute_read(self._get_user_by_email, email)
+            return values
+        
+    @staticmethod
+    def _create_User(tx, newUser):
+        query = ("CREATE (:User {email : $email,\
+                                password : $password,\
+                                firstName : $firstName,\
+                                lastName : $lastName,\
+                                phone : $phone,\
+                                address : $address})")
+        result = tx.run(query, 
+                            email = newUser['email'],
+                            password = newUser['password'],
+                            firstName = newUser['firstName'],
+                            lastName = newUser['lastName'],
+                            phone = newUser['phone'],
+                            address = newUser['address'])
+        
+        return result
+    
+    def createUser(self, newUser):
+        with self.driver.session() as session:
+            # greeting = session.execute_write(self._create_and_return_greeting, message)
+            nodeName = session.execute_write(self._create_User, newUser)
+            return nodeName
+        
 
 
 if __name__ == "__main__":
@@ -73,8 +117,8 @@ if __name__ == "__main__":
     f = open('data.json')
     data = json.load(f)
 
-    createNodes = True
-    createRoutes = True
+    createNodes = False
+    createRoutes = False
 
 
     if createNodes:
@@ -117,6 +161,14 @@ if __name__ == "__main__":
     loader.close()
     f.close()
 
+    # print(type(loader.getUserByEmail('zlobinandrey0707@gmail.com')))
+    user = {'email' : 'email',
+            'password' : 'password',
+            'firstName' : 'firstName',
+            'lastName' : 'lastName',
+            'phone' : 'phone',
+            'address' : 'address'}
+    print (loader.createUser(user))
 
 
 
