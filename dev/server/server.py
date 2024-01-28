@@ -1,64 +1,64 @@
 from fastapi import FastAPI
-from fastapi import FastAPI, Depends, Request, Response, status
+from fastapi import FastAPI, Depends, Request, Response, status, Body
 from starlette.responses import RedirectResponse, HTMLResponse, JSONResponse
-
-SECRET = 'your-secret-key'
-
-app = FastAPI()
-
 from fastapi_login import LoginManager
 
-class NotAuthenticatedException(Exception):
-    pass
+from pydantic import BaseModel
 
-manager = LoginManager(SECRET, token_url='/auth/token', custom_exception=NotAuthenticatedException)
-
-fake_db = {'drdrew': {'password': '2301'}}
+from fastapi import Depends
+from fastapi.security import OAuth2PasswordRequestForm
+from fastapi_login.exceptions import InvalidCredentialsException
 
 from fastapi.staticfiles import StaticFiles
 from starlette.responses import FileResponse 
 
 import os
 
+import json
+
+
+
+
+
+from logic import ServerLogic
+
+SECRET = 'your-secret-key'
+
+app = FastAPI()
+
+
+
+class NotAuthenticatedException(Exception):
+    pass
+
+manager = LoginManager(SECRET, token_url='/auth/token', custom_exception=NotAuthenticatedException)
+
+fake_db = ServerLogic()# {'drdrew': {'password': '2301'}}
+
+
 
 
 pages_path = directory=os.path.abspath(os.path.join( os.path.dirname(__file__), '..', 'client', 'pages'))
 
-# index_page_file = open(os.path.join(pages_path, "index.html"), "r")
-# index_page = index_page_file.read()
-
-# login_page_file = open(os.path.join(pages_path, "login.html"), "r")
-# login_page = login_page_file.read()
-
-
-# print (login_page)
-
-# @app.get('/')
-# def login ():
-#     return FileResponse(os.path.join(pages_path, "index.html"))
 
 
 
 @manager.user_loader()
-def load_user(email: str):  # could also be an asynchronous function
-    user = fake_db.get(email)
+def load_user(email: str):
+    user = fake_db.getUserByEmail(email)
     return user
 
 
-from fastapi import Depends
-from fastapi.security import OAuth2PasswordRequestForm
-from fastapi_login.exceptions import InvalidCredentialsException
-
-# the python-multipart package is required to use the OAuth2PasswordRequestForm
 @app.post('/auth/token')
 def login(data: OAuth2PasswordRequestForm = Depends()):
     email = data.username
     password = data.password
     print ('email =', email, 'password = ', password)
 
-    user = load_user(email)  # we are using the same function to retrieve the user
+    user = fake_db.getUserByEmail(email)
+    print("user = ", user)
     if not user:
-        raise InvalidCredentialsException  # you can also use your own HTTPException
+        raise InvalidCredentialsException
     elif password != user['password']:
         raise InvalidCredentialsException
 
@@ -66,7 +66,32 @@ def login(data: OAuth2PasswordRequestForm = Depends()):
         data=dict(sub=email)
     )
     return {'access_token': access_token, 'token_type': 'bearer'}
-    # return RedirectResponse(url='/', headers={'Authorization': 'Bearer '+ access_token})
+
+
+
+@app.post('/auth/create/user')
+def createUser(body =  Body()):
+
+    body = json.loads(body)
+
+    email = body["email"]
+    password = body["password"]
+    firstName = body["firstName"]
+    lastName = body["lastName"]
+    phone = body["phone"]
+    address = body["address"]
+
+    print ('email =', email,\
+            'password = ', password, \
+            'firstName = ', firstName, \
+            'lastName = ', lastName,\
+            'phone = ', phone,\
+            'address = ', address,\
+                          sep='\n', flush=True)
+
+    fake_db.createUser(body)
+
+    return {"isUserCreated":True}
 
 
 
@@ -94,16 +119,17 @@ def redirect_to_main_page(request: Request, user=Depends(manager)):
 
 
 @app.get('/')
-def protected_route(request: Request, user=Depends(manager)):
+def protected_route():#request: Request, user=Depends(manager)):
     print("protected_route")
-    print(request.headers.get('Authorization'), flush=True)
+    # print(request.headers.get('Authorization'), flush=True)
     return FileResponse(os.path.join(pages_path, "index.html"))
 
 
 app.mount("/", StaticFiles(directory=os.path.abspath(os.path.join( os.path.dirname(__file__), '..', 'client', 'static'))), name="static")
 
 
-import uvicorn
+
 
 if __name__ == "__main__":
+    import uvicorn
     uvicorn.run(app, host="127.0.0.1", port=3333)
