@@ -132,12 +132,69 @@
                     </div>
                 </div>
                 <div v-else-if="currentPage === 1">
-                    
+                    <div v-if="showedRoute !== ''" class="showRouteInfo">
+                        <div class="showRouteInfoContainer">
+                            <!-- <div class="showRouteInfoScrollBar"> -->
+                            <div class="showRouteInfoMainArea">
+                                <div class="showRouteInfoLeftArea">
+                                    <div class="searchResultTitle">
+                                        {{ showedRoute.name }}
+                                    </div>
+                                    <div class="targetAddress">
+                                        {{ showedRoute.description }}
+                                    </div>
+                                    <div class="BlockWithControlButtons removeMarginBottom">
+                                        <button class="funcBtn" v-on:click="">Route</button>
+                                        <!-- <button class="cancelBtn" v-on:click="tryToCancel">Cancel</button> -->
+                                        <button class="cancelBtn" v-on:click="showedRoute = ''; showedRouteList = []"> Close </button>
+                                       
+                                        <!-- editingRouteList.splice(editingRouteList.find((element) => element.id === item.id), 1) -->
+                                    </div>
+                                </div>
+                                <div class="showRouteInfoRightArea">
+                                    <div class="showContainedRoutesScrollBar">
+                                        <div v-for="(item, index) in showedRouteList" class="showContainedRoutesScrollBarAdaptation editRouteOnePoint">
+                                            <!-- <div class="target">     -->
+                                            <div class="editRouteOnePointImagesView">
+                                                <div class="scroll-container">
+                                                    <img src="/images/image1.jpg" alt="Cinque Terre">
+                                                    <img src="/images/image2.jpg" alt="Forest">
+                                                    <img src="/images/image3.jpg" alt="Northern Lights">
+                                                    <!-- <img src="/images/image1.jpg" alt="Mountains"> -->
+                                                </div>
+                                            </div>
+                                            <div class="targetDescription editRouteOnePointDescription" >
+                                                <div class="targetTitle">
+                                                    {{item.name}}
+                                                </div>
+                                                <div class="targetAddress ">
+                                                    Address: Рубинштейна 34
+                                                </div>
+                                                <div class="BlockWithControlButtons">
+                                                    <!-- <button class="funcBtn" v-on:click="swapTwoPlacesInEditingRouteList(index, index - 1)">Up</button>
+                                                    <button class="funcBtn" v-on:click="swapTwoPlacesInEditingRouteList(index + 1, index)">Down</button>
+                                                    <button class="deleteBtn" v-on:click="editingRouteList.splice(index, 1)">Delete</button> -->
+                                                    <!-- editingRouteList.splice(editingRouteList.find((element) => element.id === item.id), 1) -->
+                                                </div>
+                                                
+                                            </div>
+                                            <!-- </div> -->
+                                        </div>
+                                    </div>
+
+                                </div>
+                                
+                            </div>
+                                
+                            <!-- </div> -->
+
+                        </div>
+                    </div>
                     <div class="content_label">
                         Find the most suitable routes
                     </div>
                     <div class="content_block">
-                        <div class="parametersList">
+                        <div v-if="showedRoute === ''" v-bind:class="showedRoute === '' ? 'parametersList' : 'parametersListHidden'">
                             <div class="frame_with_inputs_label">
                                 Route parametres
                             </div>
@@ -145,25 +202,25 @@
                                 <div class="single_line_inp_txt">
                                     Start time
                                 </div>
-                                <input class="single_line_inp_edit">
+                                <input class="single_line_inp_edit" v-model="startTime">
                             </div>
                             <div class="single_line_inp">
                                 <div class="single_line_inp_txt">
                                     End time
                                 </div>
-                                <input class="single_line_inp_edit">
+                                <input class="single_line_inp_edit" v-model="endTime">
                             </div>
                             <div class="single_line_inp">
                                 <div class="single_line_inp_txt">
-                                    Fron where
+                                    From where
                                 </div>
-                                <input class="single_line_inp_edit">
+                                <input class="single_line_inp_edit" v-model="fromWhere">
                             </div>
                             <div class="single_line_inp">
                                 <div class="single_line_inp_txt">
                                     Where
                                 </div>
-                                <input class="single_line_inp_edit">
+                                <input class="single_line_inp_edit" v-model="where">
                             </div>
                             
                             <div class="frame_with_inputs_label">
@@ -184,9 +241,11 @@
                                     </datalist> -->
                                 </div>
                                 <div class="listOfSelectedTags">
-                                    <div v-for="(tag, index) in avaliableTagsExactlyYes" class="selectedTag"> 
-                                        <input type="checkbox" v-bind:id="tag" v-bind:value="tag" v-model="selectedTagsExactlyYes">
-                                        <label v-bind:for="tag">{{tag}}</label>
+                                    <div class="listOfSelectedTagsScrollBar">
+                                        <div v-for="(tag, index) in avaliableTagsExactlyYes" class="selectedTag"> 
+                                            <input type="checkbox" v-bind:id="tag" v-bind:value="tag" v-model="selectedTagsExactlyYes">
+                                            <label class="selectedTagLabel" v-bind:for="tag">{{tag}}</label>
+                                        </div>
                                     </div>
 
                                 </div>
@@ -207,23 +266,33 @@
                                     </datalist> -->
                                 </div>
                                 <div class="listOfSelectedTags">
-                                    <div v-for="(tag, index) in avaliableTagsExactlyNo" class="selectedTag"> 
-                                        <input type="checkbox" v-bind:id="tag" v-bind:value="tag" v-model="selectedTagsExactlyNo">
-                                        <label v-bind:for="tag">{{tag}}</label>
+                                    <div class="listOfSelectedTagsScrollBar">
+                                        <div v-for="(tag, index) in avaliableTagsExactlyNo" class="selectedTag"> 
+                                            <input class="" type="checkbox" v-bind:id="tag" v-bind:value="tag" v-model="selectedTagsExactlyNo">
+                                            <label class="selectedTagLabel" v-bind:for="tag">{{tag}}</label>
+                                        </div>
                                     </div>
-
                                 </div>
                                 
                             </div>
+                            <div class="BlockWithControlButtons removeMarginBottom">
+                                <button class="funcBtn" v-on:click="tryToSearch">Find</button>
+                                <button class="cancelBtn" v-on:click="tryToCancel">Cancel</button>
+                                <!-- editingRouteList.splice(editingRouteList.find((element) => element.id === item.id), 1) -->
+                            </div>
+                            
                         </div>
                         
                         <div class="searchResultList">
-                            <div class="searchResultTitle">
+                            <div v-if="searchRoutesResult['userRoutes'].length === 0 && searchRoutesResult['autogeneratedRoutes'].length === 0" class="searchResultTitle">
+                                Just choose what interests you
+                            </div>
+                            <div v-if="searchRoutesResult['userRoutes'].length !== 0" class="searchResultTitle">
                                 User routes
                             </div>
                             
                             
-                            <div v-for="(item, index) in [1, 2, 3, 4, 5]" class="searchResult">
+                            <div v-for="(item, index) in searchRoutesResult['userRoutes']" class="searchResult">
                                 <div class="imagesView">
                                     <div class="scroll-container">
                                         <img src="/images/image1.jpg" alt="Cinque Terre">
@@ -234,11 +303,12 @@
                                 </div>
                                 <div class="searchResultDescription">
                                     <div class="descriptionTitle">
-                                        Name {{item}}
+                                        {{ item.name }}
                                     </div>
-                                    <div class="durationResult">
-                                        Duration: 2h
-                                    </div>
+                                    <button class="save_btn" v-on:click="showedRoute = item; getShowedRouteList();">view info</button>
+                                    <!-- <div class="durationResult">
+                                        Duration
+                                    </div> -->
                                     <div class="statisticResult">
                                         10% longer than the direct route
                                         <br>
@@ -265,10 +335,10 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="searchResultTitle">
+                            <div v-if="searchRoutesResult['autogeneratedRoutes'].length !== 0" class="searchResultTitle">
                                 Autogeneration routes
                             </div>
-                            <div v-for="(item, index) in [1, 2, 3, 4, 5]" class="searchResult">
+                            <div v-for="(item, index) in searchRoutesResult['autogeneratedRoutes']" class="searchResult">
                                 <div class="imagesView">
                                     <div class="scroll-container">
                                         <img src="/images/image1.jpg" alt="Cinque Terre">
@@ -277,13 +347,15 @@
                                         <!-- <img src="/images/image1.jpg" alt="Mountains"> -->
                                       </div>
                                 </div>
-                                <div class="searchResultDescription">
+                                <div v-on:click="showedRouteId = item.id"  class="searchResultDescription">
                                     <div class="descriptionTitle">
-                                        Name {{item}}
+                                        {{ item.name }}
                                     </div>
-                                    <div class="durationResult">
-                                        Duration: 2h
-                                    </div>
+                                    <button class="save_btn" v-on:click="showedRoute = item; getShowedRouteList();">view info</button>
+
+                                    <!-- <div class="durationResult">
+                                        Duration
+                                    </div> -->
                                     <div class="statisticResult">
                                         10% longer than the direct route
                                         <br>
