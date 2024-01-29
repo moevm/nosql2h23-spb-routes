@@ -149,6 +149,18 @@ def createRoute (body = Body()):
     fake_db.createNewRoute("user", body)
     return {'success' : 'ok'} 
     
+@app.post('/get/preferences')
+def getPrefereces():
+    return fake_db.getPrefereces()
+
+@app.post('/search/sutable/routes')
+def searchSutableRoutes (body= Body()):
+    body = json.loads(body)
+
+    print(body, flush=True)
+    return fake_db.searchSutableRoutes(body)
+
+
 
 app.mount("/", StaticFiles(directory=os.path.abspath(os.path.join( os.path.dirname(__file__), '..', 'client', 'static'))), name="static")
 
