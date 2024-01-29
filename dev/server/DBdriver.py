@@ -88,6 +88,19 @@ class DataBaseDriver:
             values = session.execute_read(self._get_user_by_email, email)
             return values
         
+
+    @staticmethod  
+    def _get_all_routes(tx):
+        query = "match (n:UserRoute) return n"
+        result = tx.run(query)
+        return [record for record in result.data()]
+
+    def getAllRoutes(self):
+        with self.driver.session() as session:
+            values = session.execute_read(self._get_all_routes)
+            return values
+        
+    
     @staticmethod
     def _create_User(tx, newUser):
         query = ("CREATE (:User {email : $email,\
