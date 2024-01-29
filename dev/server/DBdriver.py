@@ -5,6 +5,8 @@ import http.client
 
 from http.client import RemoteDisconnected
 
+
+
 class DataBaseDriver:
 
     def __init__(self, uri, user, password):
@@ -146,6 +148,31 @@ class DataBaseDriver:
             values = session.execute_read(self._get_sight_by_id, id)
             return values
         
+    
+        
+
+    @staticmethod
+    def _create_User_route(tx, user, route):
+        query = (
+                "CREATE (ur:UserRoute{id : '"+ route["id"] +"',\
+                                     name : '"+ route["name"] +"',\
+                                     description : '"+ route["description"] +"', \
+                                     sightsSubsequenceIds : " + route["sightsSubsequenceIds"] + "})\
+                WITH ur\
+                MATCH (sight:Sight)\
+                WHERE sight.id IN ur.sightsSubsequenceIds \
+                CREATE (ur)-[:CONTAINS]->(sight)"
+                )
+                
+        result = tx.run(query)
+        record = result.single()
+        return record
+        
+    def createUserRoute(self, user, route):
+        with self.driver.session() as session:
+            # greeting = session.execute_write(self._create_and_return_greeting, message)
+            nodeName = session.execute_write(self._create_User_route, user, route)
+            return nodeName
 
 
 if __name__ == "__main__":

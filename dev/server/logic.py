@@ -1,5 +1,8 @@
 from DBdriver import DataBaseDriver
 
+import uuid
+
+
 class ServerLogic:
     def __init__(self):
         self.__dataBaseDriver = DataBaseDriver("bolt://localhost:7687", "neo4j", "Andrew_07072002")
@@ -28,3 +31,13 @@ class ServerLogic:
     
     def getSightById(self, id):
         return self.__dataBaseDriver.getSightById(id)
+    
+    def createNewRoute(self, user, newRoute):
+        name = newRoute['newRouteName']
+        description = newRoute['newRouteDescription']
+        sightsSubsequenceIds = [i["id"] for i in newRoute["newRouteList"]]
+        route = {"id" : str(uuid.uuid4()),
+                 "name" : name,
+                 "description" : description,
+                 "sightsSubsequenceIds": str(sightsSubsequenceIds)}
+        self.__dataBaseDriver.createUserRoute(user, route)

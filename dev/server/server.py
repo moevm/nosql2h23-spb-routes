@@ -140,6 +140,16 @@ def getSightById (body = Body()):
     # return {'success' : 'ok'} 
     return fake_db.getSightById(body['id'])
 
+
+@app.post('/create/route')
+def createRoute (body = Body()):
+    body = json.loads(body)
+
+    print(body, flush=True)
+    fake_db.createNewRoute("user", body)
+    return {'success' : 'ok'} 
+    
+
 app.mount("/", StaticFiles(directory=os.path.abspath(os.path.join( os.path.dirname(__file__), '..', 'client', 'static'))), name="static")
 
 

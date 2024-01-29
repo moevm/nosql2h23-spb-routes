@@ -143,48 +143,77 @@
                             </div>
                             <div class="single_line_inp">
                                 <div class="single_line_inp_txt">
-                                    parameter1
+                                    Start time
                                 </div>
                                 <input class="single_line_inp_edit">
                             </div>
                             <div class="single_line_inp">
                                 <div class="single_line_inp_txt">
-                                    parameter2
+                                    End time
                                 </div>
                                 <input class="single_line_inp_edit">
                             </div>
                             <div class="single_line_inp">
                                 <div class="single_line_inp_txt">
-                                    parameter3
+                                    Fron where
                                 </div>
                                 <input class="single_line_inp_edit">
                             </div>
                             <div class="single_line_inp">
                                 <div class="single_line_inp_txt">
-                                    parameter4
+                                    Where
                                 </div>
                                 <input class="single_line_inp_edit">
                             </div>
-                            <div class="single_line_inp">
-                                <div class="single_line_inp_txt">
-                                    parameter5
-                                </div>
-                                <input class="single_line_inp_edit">
-                            </div>
+                            
                             <div class="frame_with_inputs_label">
                                 Preferences
                             </div>
-                            <div class="single_line_inp">
-                                <div class="single_line_inp_txt">
-                                    parameter1
+                            <div class="tagInput">
+                                <div class="removeMargin single_line_inp ">
+                                    <div class="single_line_inp_txt">
+                                        Exactly yes 
+                                    </div>
+                                    <!-- selectedTagsExactlyYes -->
+                                    
+                                    <!-- <input class="single_line_inp_edit" list="ExactlyYesTags" autocomplete="on" text="selectedTagsExactlyYes">
+                                    <datalist id="ExactlyYesTags" class="tagSelectTipList">
+                                        <option v-for="(tag, index) in avaliableTagsExactlyYes" class="tagSelectTip"> {{tag}} </option>
+                                        
+                                        <input type="submit">
+                                    </datalist> -->
                                 </div>
-                                <input class="single_line_inp_edit">
+                                <div class="listOfSelectedTags">
+                                    <div v-for="(tag, index) in avaliableTagsExactlyYes" class="selectedTag"> 
+                                        <input type="checkbox" v-bind:id="tag" v-bind:value="tag" v-model="selectedTagsExactlyYes">
+                                        <label v-bind:for="tag">{{tag}}</label>
+                                    </div>
+
+                                </div>
+                                
                             </div>
-                            <div class="single_line_inp">
-                                <div class="single_line_inp_txt">
-                                    parameter2
+                            <div class="tagInput">
+                                <div class="removeMargin single_line_inp ">
+                                    <div class="single_line_inp_txt">
+                                        Exactly no 
+                                    </div>
+                                    <!-- selectedTagsExactlyYes -->
+                                    
+                                    <!-- <input class="single_line_inp_edit" list="ExactlyNoTags" autocomplete="on">
+                                    <datalist id="ExactlyNoTags" class="tagSelectTipList">
+                                        <option v-for="(tag, index) in avaliableTagsExactlyNo" class="tagSelectTip"> {{tag}} </option>
+                                    
+                                        <input type="submit">
+                                    </datalist> -->
                                 </div>
-                                <input class="single_line_inp_edit">
+                                <div class="listOfSelectedTags">
+                                    <div v-for="(tag, index) in avaliableTagsExactlyNo" class="selectedTag"> 
+                                        <input type="checkbox" v-bind:id="tag" v-bind:value="tag" v-model="selectedTagsExactlyNo">
+                                        <label v-bind:for="tag">{{tag}}</label>
+                                    </div>
+
+                                </div>
+                                
                             </div>
                         </div>
                         
@@ -483,7 +512,10 @@
                                             Address: Рубинштейна 34
                                         </div>
                                         <div class="BlockWithControlButtons">
-                                            <button class="funcBtn" v-on:click="editingRouteList.push(selectedOnRouteEditMapSight);selectedOnRouteEditMapSight=''">Add to route</button>
+                                            <button class="funcBtn" v-on:click="swapTwoPlacesInEditingRouteList(index, index - 1)">Up</button>
+                                            <button class="funcBtn" v-on:click="swapTwoPlacesInEditingRouteList(index + 1, index)">Down</button>
+                                            <button class="deleteBtn" v-on:click="editingRouteList.splice(index, 1)">Delete</button>
+                                            <!-- editingRouteList.splice(editingRouteList.find((element) => element.id === item.id), 1) -->
                                         </div>
                                         
                                     </div>
@@ -496,11 +528,16 @@
                                     <div class="single_line_inp_txt">
                                         Name
                                     </div>
-                                    <input class="single_line_inp_edit" placeholder="Name">
+                                    <input class="single_line_inp_edit" placeholder="Name" v-model="editRouteName">
                                 </div>
                                 <div class="single_line_inp">
                                     
-                                    <textarea  type="text" class="multilineInput" placeholder="Write description here"></textarea>
+                                    <textarea v-model="editRouteDescription" type="text" class="multilineInput" placeholder="Write description here"></textarea>
+                                </div>
+                                <div v-if="editingRouteList.length !== 0" class="BlockWithControlButtons removeMarginBottom">
+                                    <button class="funcBtn" v-on:click="tryToSaveRoute">Save</button>
+                                    <button class="cancelBtn" v-on:click="deleteEditing">Cancel</button>
+                                    <!-- editingRouteList.splice(editingRouteList.find((element) => element.id === item.id), 1) -->
                                 </div>
                             </div>
                             <div class="addNewRouteMap">

@@ -79,9 +79,15 @@ const App = {
 
             selectedOnRouteEditMapSight : '',
 
+            editRouteName :'',
+            editRouteDescription: '',
+
             notes : ['task 1', 'task 2'],
 
-            
+            selectedTagsExactlyYes :[],
+            avaliableTagsExactlyYes :["Volga", "Ne Volga", "Home"],
+            selectedTagsExactlyNo :[],
+            avaliableTagsExactlyNo :["Ne Volga", "Volga", "no Homo"]
             
         }
     },
@@ -113,29 +119,50 @@ const App = {
     },
 
     methods : {
-        // inputChangeHandler (event) {
-        //     console.log("inputChangeHandlers : ", event.target.value);
-        //     this.inputValue = event.target.value;
-        // },
-        // addNewNote() {
-        //     this.notes.push(this.inputValue);
-        //     this.inputValue = "";
-        // } ,
+        swapTwoPlacesInEditingRouteList(id1, id2) {
+            if (id1 >= 0 && id2 >= 0 && id1 < this.editingRouteList.length && id2 < this.editingRouteList.length) {
 
-        // inputKeyPress(event) {
-        //     console.log(event.key);
-        //     if (event.key === "Enter") {
-        //         this.addNewNote();
-        //     }
-            
-        // },
-        // removeNote(idx, event) {
-        //     console.log("renove", idx, event);
-        //     this.notes.splice(idx, 1)
-        // },
-        // switchPage(idx) {
+                // let swap = editingRouteList[editingRouteList.find((element) => element.id === id1)]
+                // editingRouteList[editingRouteList.find((element) => element.id === id1)] = editingRouteList[editingRouteList.find((element) => element.id === id2)]
+                // editingRouteList[editingRouteList.find((element) => element.id === id2)] = swap
+                let swap = this.editingRouteList[id1];
+                this.editingRouteList[id1] = this.editingRouteList[id2];
+                this.editingRouteList[id2] = swap;
+            }
+        },
 
-        // }
+        tryToSaveRoute () {
+            console.log(this.editRouteName);
+            console.log(this.editRouteDescription);
+            fetch("/create/route", 
+                {
+                    method: "POST",
+                    body: JSON.stringify({ 
+                        newRouteList : this.editingRouteList,
+                        // name : 'name'
+                        newRouteName : this.editRouteName,
+                        newRouteDescription : this.editRouteDescription
+                    }),
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded"
+                        // Authorization: 'Bearer '+ localStorage.access_token ,
+                    }
+                    }
+                    ).then((response) => response.json()).then((json) => {
+                        // console.log('json[sights] = ', json['sights']);
+                        // console.log('json[sights] = ',  JSON.parse(json)['sights']);
+
+                        // updateSightsPoints(JSON.parse(json)['sights']);
+                    this.deleteEditing();
+            });
+                
+        },
+        deleteEditing() {
+            this.editingRouteList = [];
+            this.editRouteName = '';
+            this.editRouteDescription = '';
+        },
+
         startMap() {
             console.log("map called", document.getElementById("demoMap"));
             
@@ -268,7 +295,7 @@ const App = {
                 { 
                     ((i)=> {
                         var lonLat = new OpenLayers.LonLat(listd[i].lon, listd[i].lat).transform( fromProjection, toProjection);
-                        console.log(lonLat);
+                        // console.log(lonLat);
                         
                         //  var title = listd[i].Title;
                         //  var iconPath = listd[i].IconPath;
