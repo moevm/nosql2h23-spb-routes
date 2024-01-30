@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi import FastAPI, Depends, Request, Response, status, Body
 from starlette.responses import RedirectResponse, HTMLResponse, JSONResponse
-from fastapi_login import LoginManager
+from fastapi_login import *
 
 from pydantic import BaseModel
 
@@ -32,6 +32,9 @@ class NotAuthenticatedException(Exception):
     pass
 
 manager = LoginManager(SECRET, token_url='/auth/token', custom_exception=NotAuthenticatedException, use_cookie=True)
+# manager.attach_middleware(app)
+# manager.
+
 
 fake_db = ServerLogic()# {'drdrew': {'password': '2301'}}
 
@@ -68,8 +71,12 @@ def login(data: OAuth2PasswordRequestForm = Depends()):
     print(access_token, flush=True)
     # return {'access_token': access_token, 'token_type': 'bearer'}
     resp = RedirectResponse(url="/")
+    if (isAdmin(user['email'])):
+        resp = RedirectResponse(url="/admin")
+    
 
     manager.set_cookie(resp, access_token)
+    
     return resp
 
 
@@ -144,10 +151,16 @@ def redirect_to_main_page(request: Request, user=Depends(manager)):
 
 @app.get('/')
 def protected_route(request: Request, user=Depends(manager)):
-    print("protected_route")
+    print("protected_route", user)
     print(request.headers.get('Authorization'), flush=True)
     return FileResponse(os.path.join(pages_path, "index.html"))
 
+
+@app.post('/get/current/user')
+def protected_route(request: Request, user=Depends(manager)):
+    print("protected_route", user)
+    print(request.headers.get('Authorization'), flush=True)
+    return user
 
 @app.post('/get/dysplayable/points')
 def getDysplayablePoints(body = Body()):
@@ -184,13 +197,19 @@ def searchSutableRoutes (body= Body()):
     print(body, flush=True)
     return fake_db.searchSutableRoutes(body)
 
-
+def isAdmin(email):
+    if "Admin" in fake_db.getUserRolesByEmail(email):
+        return True
+    return False
 
 @app.get('/admin')
-def protected_route():#request: Request, user=Depends(manager)):
+def protected_route(request: Request, user=Depends(manager)):
     print("protected_route")
+    # roles = fake_db.getUserRolesByEmail(user['email'])
+    if (isAdmin(user['email'])):
     # print(request.headers.get('Authorization'), flush=True)
-    return FileResponse(os.path.join(pages_path, "admin.html"))
+        return FileResponse(os.path.join(pages_path, "admin.html"))
+    return RedirectResponse(url="/login")
 
 @app.post('/get/all/routes')
 def getAllRoutes(body= Body()):

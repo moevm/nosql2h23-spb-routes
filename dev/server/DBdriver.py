@@ -90,6 +90,19 @@ class DataBaseDriver:
         
 
     @staticmethod  
+    def _get_user_roles_by_email(tx, email):
+        query = "MATCH (r:User {email:'"+ email +"'}) RETURN labels(r);"
+        result = tx.run(query)
+        
+        return result.single().value()
+
+
+    def getUserRolesByEmail (self, email):
+        with self.driver.session() as session:
+            values = session.execute_read(self._get_user_roles_by_email, email)
+            return values
+
+    @staticmethod  
     def _get_all_routes(tx):
         query = "match (n:UserRoute) return n"
         result = tx.run(query)
@@ -186,126 +199,8 @@ class DataBaseDriver:
             # greeting = session.execute_write(self._create_and_return_greeting, message)
             nodeName = session.execute_write(self._create_User_route, user, route)
             return nodeName
-# filter 
-# return nearest nodes
-    @staticmethod
-    def _return_nearest_nodes(tx, currentPoint):
-        query = "MATCH (node) \
-                WHERE exists(node.lat) AND exists(node.lon) \
-                WITH node, distance(point({latitude: node.lat, longitude: node.lon}), point({latitude: $pointLat, longitude: $pointLon})) AS dist \
-                RETURN node, dist \
-                ORDER BY dist \
-                LIMIT $limitNodes"
-        result = tx.run(query,
-                        pointLat = currentPoint['pointLat'],
-                        pointLon = currentPoint['pointLon'],
-                        limitNodes = currentPoint['limitNodes'])
-        result = tx.run(query)
-        return result
-        
-    def returnNearestNodes(self, currentPoint):
-        with self.driver.session() as session:
-            # greeting = session.execute_write(self._create_and_return_greeting, message)
-            values = session.execute_write(self._return_nearest_node, currentPoint)
-            return values
-        
-# returns routes with start point that have the specified labels and number of nodes
-    @staticmethod
-    def _return_specified_routes_start_point(tx, expandStartPoint):
-        
-        query = "MATCH (p:Sight {name:$startPointName}) \
-                CALL apoc.path.expand(p, $footRoute, $tags, $limitNodes, 4) \
-                YIELD path \
-                RETURN path, length(path) AS hops \
-                ORDER BY hops \
-                LIMIT $limitRoutes" 
-        result = tx.run(query,
-                        startPointName = expandStartPoint['startPointName'],
-                        footRoute = expandStartPoint['footRoute'],
-                        ###TODO: парсинг тегов и сбор строки
-                        tags = expandStartPoint['tags'],
-                        limitNodes = expandStartPoint['limitNodes'],
-                        limitRoutes = expandStartPoint['limitRoutes'])
 
-        result = tx.run(query)
-        return result
-       
-    def returnSpecifiedRoutesStartPoint(self, expandStartPoint):
-        with self.driver.session() as session:
-            # greeting = session.execute_write(self._create_and_return_greeting, message)
-            values = session.execute_write(self._return_specified_routes_start_point, expandStartPoint)
-            return values
-        
-# returns routes with the specified labels and number of nodes from between initial and final point
-    @staticmethod
-    def _return_specified_routes_start_end_point(tx, expandPoints):
-        
-        query = "MATCH (p:Sight {name:$startPointName}) \
-                MATCH (joe:Sight {name: $endPointName}) \
-                CALL apoc.path.expandConfig(p, { \
-                relationshipFilter: $footRoute, \
-                labelFilter: $tags, \
-                minLevel: $minLevel, \
-                maxLevel: $maxLevel \
-                }) \
-                YIELD path \
-                RETURN path, length(path) AS hops \
-                ORDER BY hops \
-                LIMIT $limitRoutes" 
-        result = tx.run(query,
-                        startPointName = expandPoints['startPointName'],
-                        endPointName = expandPoints['endPointName'],
-                        footRoute = expandPoints['footRoute'],
-                        ###TODO: парсинг тегов и сбор строки
-                        tags = expandPoints['tags'],
-                        minLevel = expandPoints['minLevel'],
-                        maxLevel = expandPoints['maxLevel'],
-                        limitRoutes = expandPoints['limitRoutes'])
 
-        result = tx.run(query)
-        return result
-        
-    def returnSpecifiedRoutesStartPoint(self, expandPoints):
-        with self.driver.session() as session:
-            # greeting = session.execute_write(self._create_and_return_greeting, message)
-            values = session.execute_write(self._return_specified_routes_start_end_point, expandPoints)
-            return values
-
-# arbitrary route of a given length
-    # @staticmethod  
-    # def _return_rundom_walk(tx, randomBase):
-        
-    #     query = "MATCH (p:Sight {name:$startPointName}) \
-    #             MATCH (joe:Sight {name: $endPointName}) \
-    #             CALL apoc.path.expandConfig(p, { \
-    #             relationshipFilter: $footRoute, \
-    #             labelFilter: $tags, \
-    #             minLevel: $minLevel, \
-    #             maxLevel: $maxLevel \
-    #             }) \
-    #             YIELD path \
-    #             RETURN path, length(path) AS hops \
-    #             ORDER BY hops \
-    #             LIMIT $limitRoutes" 
-    #     result = tx.run(query,
-    #                     startPointName = expandPoints['startPointName'],
-    #                     endPointName = expandPoints['endPointName'],
-    #                     footRoute = expandPoints['footRoute'],
-    #                     ###TODO: парсинг тегов и сбор строки
-    #                     tags = expandPoints['tags'],
-    #                     minLevel = expandPoints['minLevel'],
-    #                     maxLevel = expandPoints['maxLevel'],
-    #                     limitRoutes = expandPoints['limitRoutes'])
-
-    #     result = tx.run(query)
-    #     return result
-        
-    # def returnSpecifiedRoutesStartPoint(self, expandPoints):
-    #     with self.driver.session() as session:
-    #         # greeting = session.execute_write(self._create_and_return_greeting, message)
-    #         values = session.execute_write(self._return_specified_routes_start_end_point, expandPoints)
-    #         return values 
-    
 if __name__ == "__main__":
     loader = DataBaseDriver("bolt://localhost:7687", "neo4j", "Andrew_07072002")
     f = open('data.json')

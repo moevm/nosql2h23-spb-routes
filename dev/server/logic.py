@@ -13,6 +13,9 @@ class ServerLogic:
     def getUserByEmail(self, email : str):
         return self.__dataBaseDriver.getUserByEmail(email)
 
+    def getUserRolesByEmail(self, email):
+        return self.__dataBaseDriver.getUserRolesByEmail(email)
+
     def createUser(self, user:dict):
         return self.__dataBaseDriver.createUser(user)
     
