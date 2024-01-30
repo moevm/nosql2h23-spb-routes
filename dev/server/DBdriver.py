@@ -112,6 +112,19 @@ class DataBaseDriver:
         with self.driver.session() as session:
             values = session.execute_read(self._get_all_routes)
             return values
+
+
+    @staticmethod 
+    def _get_all_sight_labels(tx):
+        query = "MATCH (a:Sight) WITH LABELS(a) AS temp UNWIND temp AS LABELLIST return DISTINCT LABELLIST;"
+        result = tx.run(query)
+        return [record for record in result.data()]
+
+    def getAllSightLabels(self):
+        with self.driver.session() as session:
+            values = session.execute_read(self._get_all_sight_labels)
+            return values
+
         
     
     @staticmethod
@@ -174,7 +187,28 @@ class DataBaseDriver:
             values = session.execute_read(self._get_sight_by_id, id)
             return values
         
-    
+    @staticmethod  
+    def _generate_routes_by_start_point(tx, startPoint, stringWithTags):
+        query = "MATCH (node)\
+                WHERE exists(node.lat) AND exists(node.lon)\
+                WITH node, distance(point({latitude: node.lat, longitude: node.lon}), point({latitude: "+str(startPoint['lat'])+", longitude: "+str(startPoint['lon'])+"})) AS dist\
+                MATCH (p:Sight {name:node.name})\
+                CALL apoc.path.expand(p, 'FOOT_ROUTE', "+stringWithTags+", 3, 4)\
+                YIELD path\
+                RETURN nodes(path), relationships(path), length(path) AS hops\
+                ORDER BY dist, hops\
+                LIMIT 10"
+        result = tx.run(query)
+        # values = [record.values() for record in result]
+        # return values
+        return [{"nodes" : [dict(nodes) for nodes in paths.values()[0]],
+                  "relationships" : [dict(arrow) for arrow in paths.values()[1]], 
+                  "length": paths.values()[2]} for paths in result]
+
+    def generateRoutesByStartPoint(self, startPoint, stringWithTags):
+        with self.driver.session() as session:
+            values = session.execute_read(self._generate_routes_by_start_point, startPoint, stringWithTags)
+            return values
         
 
     @staticmethod
