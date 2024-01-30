@@ -480,9 +480,23 @@ const App = {
         },
 
         logout () {
-            localStorage.clear();
+            // localStorage.clear();
             // window.location.pathname = 'login'; 
-            window.location.reload();
+            // window.location.reload();
+            
+            console.log ("logout called")
+            fetch("/logout", {
+            method: "GET",
+            // body: JSON.stringify({
+            //     logout : true,
+            // }),
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            }
+            }).then((response) => {window.location.href = response.url; json = response.json(); console.log(json)})
+                
+
+             
         }
     },
     // watch: {

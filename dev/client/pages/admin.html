@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Admin App for Path Finder</title>
+        <link href='https://fonts.googleapis.com/css?family=Inter' rel='stylesheet'>
+        <link rel="stylesheet" href="theme.css" />
+    </head>
+
+    <body>
+        <div class="container pt-5" id="app">
+            <div class="Topbar">
+                <div class="NavigationBtnsArea">
+                    <button v-on:click="currentPage=0" v-bind:class="[currentPage==0 ? 'NavigationBtnActive':'NavigationBtn']" >
+                        <!-- class="NavigationBtn"v-class="{Active: currentPage==0}" -->
+                        Global import / export
+                    </button>
+                    <button v-on:click="currentPage=1" v-bind:class="[currentPage==1 ? 'NavigationBtnActive':'NavigationBtn']" >
+                        All routes
+                    </button>
+                    <button v-on:click="currentPage=2" v-bind:class="[currentPage==2 ? 'NavigationBtnActive':'NavigationBtn']" >
+                        All places
+                    </button>
+                    <button v-on:click="currentPage=3" v-bind:class="[currentPage==3 ? 'NavigationBtnActive':'NavigationBtn']" >
+                        All Users
+                    </button>
+                    
+                </div>
+            </div>
+
+            <div class="main_pannel">
+                <div v-if="currentPage === 0">
+                    <div v-if="showedPlace !== ''" class="showRouteInfo">
+                        <div class="showRouteInfoContainer">
+                            <!-- <div class="showRouteInfoScrollBar"> -->
+                            <div class="showRouteInfoMainArea">
+                                <div class="showRouteInfoLeftArea showRouteInfoLeftAreaAdminPanelExtention">
+                                    <div class="searchResultTitle">
+                                        {{ showedPlace.name }}
+                                    </div>
+                                    <div class="editRouteOnePointImagesView editRouteOnePointImagesViewAdminPanelExtention">
+                                        <div class="scroll-container">
+                                            <img src="/images/image1.jpg" alt="Cinque Terre">
+                                            <img src="/images/image2.jpg" alt="Forest">
+                                            <img src="/images/image3.jpg" alt="Northern Lights">
+                                            <!-- <img src="/images/image1.jpg" alt="Mountains"> -->
+                                        </div>
+                                    </div>
+                                    <div class="searchResultTitle searchResultTitleAdminPanelExtention">
+                                        Place Info 
+                                    </div>
+                                    <div class="targetAddress">
+                                        
+                                        Tags : {{ showedPlace.kinds }} <br>
+                                        Coordinates : <br>
+                                        longitude = {{ showedPlace.lon }} <br>
+                                        latitude = {{ showedPlace.lat }} <br>
+
+                                    </div>
+                                    <div class="BlockWithControlButtons removeMarginBottom">
+                                        <button class="funcBtn" v-on:click="">Route</button>
+                                        <!-- <button class="cancelBtn" v-on:click="tryToCancel">Cancel</button> -->
+                                        <button class="cancelBtn" v-on:click="showedPlace = ''; showedRouteList = []"> Close </button>
+                                       
+                                        <!-- editingRouteList.splice(editingRouteList.find((element) => element.id === item.id), 1) -->
+                                    </div>
+                                </div>
+                                
+                                
+                            </div>
+                                
+                            <!-- </div> -->
+
+                        </div>
+                    </div>
+                    
+                    <div>  
+                        <div class="content_label">
+                            Manage resources
+                        </div>
+                        <div class="content_block">
+                            
+                            <div v-if="showedPlace === ''" class="parametersList parametersListAdminPanelExtention">
+                                <div class="frame_with_inputs_label">
+                                    Import data
+                                </div>
+                                <div class="single_line_inp">
+                                    <div class="single_line_inp_txt">
+                                        path to .json file
+                                    </div>
+                                    <input class="single_line_inp_edit">
+                                </div>
+                                <!-- v-if="editingRouteList.length !== 0" -->
+                                <div  class="BlockWithControlButtons removeMarginBottom">
+                                    <button class="funcBtn" v-on:click="">Import</button>
+                                    <button class="cancelBtn" v-on:click="">Cancel</button>
+                                    <!-- editingRouteList.splice(editingRouteList.find((element) => element.id === item.id), 1) -->
+                                </div>
+                                <div class="frame_with_inputs_label">
+                                    Export data
+                                </div>
+                                <div class="single_line_inp">
+                                    <div class="single_line_inp_txt">
+                                        path to .json file
+                                    </div>
+                                    <input class="single_line_inp_edit">
+                                </div>
+                                <!-- v-if="editingRouteList.length !== 0" -->
+                                <div  class="BlockWithControlButtons removeMarginBottom">
+                                    <button class="funcBtn" v-on:click="">Export</button>
+                                    <button class="cancelBtn" v-on:click="">Cancel</button>
+                                    <!-- editingRouteList.splice(editingRouteList.find((element) => element.id === item.id), 1) -->
+                                </div>
+                            </div>
+                            <div v-if="showedPlace === ''" class="addNewPlaceMap">
+                                <div class="mapHolder">
+                                    <div id="demoMap" class="map"></div>
+                                </div>
+                                <div class="admiPanelMapTitle">
+                                    All current sights in database displaied on map
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+
+                <div v-else-if="currentPage === 1">
+                    <div v-if="showedRoute !== ''" class="showRouteInfo">
+                        <div class="showRouteInfoContainer">
+                            <!-- <div class="showRouteInfoScrollBar"> -->
+                            <div class="showRouteInfoMainArea">
+                                <div class="showRouteInfoLeftArea">
+                                    <div class="searchResultTitle">
+                                        {{ showedRoute.name }}
+                                    </div>
+                                    <div class="targetAddress">
+                                        {{ showedRoute.description }}
+                                    </div>
+                                    <div class="BlockWithControlButtons removeMarginBottom">
+                                        <button class="funcBtn" v-on:click="">Route</button>
+                                        <!-- <button class="cancelBtn" v-on:click="tryToCancel">Cancel</button> -->
+                                        <button class="cancelBtn" v-on:click="showedRoute = ''; showedRouteList = []"> Close </button>
+                                       
+                                        <!-- editingRouteList.splice(editingRouteList.find((element) => element.id === item.id), 1) -->
+                                    </div>
+                                </div>
+                                <div class="showRouteInfoRightArea">
+                                    <div class="showContainedRoutesScrollBar">
+                                        <div v-for="(item, index) in showedRouteList" class="showContainedRoutesScrollBarAdaptation editRouteOnePoint">
+                                            <!-- <div class="target">     -->
+                                            <div class="editRouteOnePointImagesView">
+                                                <div class="scroll-container">
+                                                    <img src="/images/image1.jpg" alt="Cinque Terre">
+                                                    <img src="/images/image2.jpg" alt="Forest">
+                                                    <img src="/images/image3.jpg" alt="Northern Lights">
+                                                    <!-- <img src="/images/image1.jpg" alt="Mountains"> -->
+                                                </div>
+                                            </div>
+                                            <div class="targetDescription editRouteOnePointDescription" >
+                                                <div class="targetTitle">
+                                                    {{item.name}}
+                                                </div>
+                                                <div class="targetAddress ">
+                                                    Address: Рубинштейна 34
+                                                </div>
+                                                <div class="BlockWithControlButtons">
+                                                    <!-- <button class="funcBtn" v-on:click="swapTwoPlacesInEditingRouteList(index, index - 1)">Up</button>
+                                                    <button class="funcBtn" v-on:click="swapTwoPlacesInEditingRouteList(index + 1, index)">Down</button>
+                                                    <button class="deleteBtn" v-on:click="editingRouteList.splice(index, 1)">Delete</button> -->
+                                                    <!-- editingRouteList.splice(editingRouteList.find((element) => element.id === item.id), 1) -->
+                                                </div>
+                                                
+                                            </div>
+                                            <!-- </div> -->
+                                        </div>
+                                    </div>
+
+                                </div>
+                                
+                            </div>
+                                
+                            <!-- </div> -->
+
+                        </div>
+                    </div>
+                    <div class="content_label">
+                        Manage routes
+                    </div>
+                    <div class="content_block">
+                        <div v-if="showedRoute === ''" class="parametersList parametersListManageRoutes">
+                            <div class="frame_with_inputs_label">
+                                Import data
+                            </div>
+                            <div class="single_line_inp">
+                                <div class="single_line_inp_txt">
+                                    path to .json file
+                                </div>
+                                <input class="single_line_inp_edit">
+                            </div>
+                            <!-- v-if="editingRouteList.length !== 0" -->
+                            <div  class="BlockWithControlButtons removeMarginBottom">
+                                <button class="funcBtn" v-on:click="">Import</button>
+                                <button class="cancelBtn" v-on:click="">Cancel</button>
+                                <!-- editingRouteList.splice(editingRouteList.find((element) => element.id === item.id), 1) -->
+                            </div>
+                            <div class="frame_with_inputs_label">
+                                Export data
+                            </div>
+                            <div class="single_line_inp">
+                                <div class="single_line_inp_txt">
+                                    path to .json file
+                                </div>
+                                <input class="single_line_inp_edit">
+                            </div>
+                            <!-- v-if="editingRouteList.length !== 0" -->
+                            <div  class="BlockWithControlButtons removeMarginBottom">
+                                <button class="funcBtn" v-on:click="">Export</button>
+                                <button class="cancelBtn" v-on:click="">Cancel</button>
+                                <!-- editingRouteList.splice(editingRouteList.find((element) => element.id === item.id), 1) -->
+                            </div>
+                        </div>
+                            
+                        
+                        <div class="searchResultList">
+                        <!--     <div v-if="searchRoutesResult['userRoutes'].length === 0 && searchRoutesResult['autogeneratedRoutes'].length === 0" class="searchResultTitle">
+                                Just choose what interests you
+                            </div> -->
+                            <!-- v-if="searchRoutesResult['userRoutes'].length !== 0" -->
+                            <div class="searchResultTitle">
+                                User routes
+                            </div>
+                            
+                            
+                            <div v-for="(item, index) in allUserRoutes" class="searchResult">
+                                <div class="imagesView">
+                                    <div class="scroll-container">
+                                        <img src="/images/image1.jpg" alt="Cinque Terre">
+                                        <img src="/images/image2.jpg" alt="Forest">
+                                        <img src="/images/image3.jpg" alt="Northern Lights">
+                                        <!-- <img src="/images/image1.jpg" alt="Mountains"> -->
+                                      </div>
+                                </div>
+                                <div class="searchResultDescription">
+                                    <div class="descriptionTitle">
+                                        {{ item.name }}
+                                    </div>
+                                    <button class="save_btn" v-on:click="showedRoute = item; getShowedRouteList();">view info</button>
+                                    <!-- <div class="durationResult">
+                                        Duration
+                                    </div> -->
+                                    <div class="statisticResult">
+                                        10% longer than the direct route
+                                        <br>
+                                        50% more interesting than the direct route
+                                    </div>
+                                    <div class="routeTags">
+
+                                    </div>
+                                    
+                                </div>
+                                <div class="controlBtbs">
+                                    <!-- <div class="funcBtns">
+                                        <button class="funcBtn">
+                                            View User
+                                        </button>
+                                    </div> -->
+                                    <div class="evaluativeBtns">
+                                        <button class="save_btn">
+                                            Edit
+                                        </button>
+                                        <button class="cancel_btn">
+                                            Delete
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    
+                </div>
+
+
+
+
+                <div v-else-if="currentPage === 2">
+                    <div v-if="showedRoute !== ''" class="showRouteInfo">
+                        <div class="showRouteInfoContainer">
+                            <!-- <div class="showRouteInfoScrollBar"> -->
+                            <div class="showRouteInfoMainArea">
+                                <div class="showRouteInfoLeftArea">
+                                    <div class="searchResultTitle">
+                                        {{ showedRoute.name }}
+                                    </div>
+                                    <div class="targetAddress">
+                                        {{ showedRoute.description }}
+                                    </div>
+                                    <div class="BlockWithControlButtons removeMarginBottom">
+                                        <button class="funcBtn" v-on:click="">Route</button>
+                                        <!-- <button class="cancelBtn" v-on:click="tryToCancel">Cancel</button> -->
+                                        <button class="cancelBtn" v-on:click="showedRoute = ''; showedRouteList = []"> Close </button>
+                                       
+                                        <!-- editingRouteList.splice(editingRouteList.find((element) => element.id === item.id), 1) -->
+                                    </div>
+                                </div>
+                                <div class="showRouteInfoRightArea">
+                                    <div class="showContainedRoutesScrollBar">
+                                        <div v-for="(item, index) in showedSightList" class="showContainedRoutesScrollBarAdaptation editRouteOnePoint">
+                                            <!-- <div class="target">     -->
+                                            <div class="editRouteOnePointImagesView">
+                                                <div class="scroll-container">
+                                                    <img src="/images/image1.jpg" alt="Cinque Terre">
+                                                    <img src="/images/image2.jpg" alt="Forest">
+                                                    <img src="/images/image3.jpg" alt="Northern Lights">
+                                                    <!-- <img src="/images/image1.jpg" alt="Mountains"> -->
+                                                </div>
+                                            </div>
+                                            <div class="targetDescription editRouteOnePointDescription" >
+                                                <div class="targetTitle">
+                                                    {{item.name}}
+                                                </div>
+                                                <div class="targetAddress ">
+                                                    Address: Рубинштейна 34
+                                                </div>
+                                                <div class="BlockWithControlButtons">
+                                                    <!-- <button class="funcBtn" v-on:click="swapTwoPlacesInEditingRouteList(index, index - 1)">Up</button>
+                                                    <button class="funcBtn" v-on:click="swapTwoPlacesInEditingRouteList(index + 1, index)">Down</button>
+                                                    <button class="deleteBtn" v-on:click="editingRouteList.splice(index, 1)">Delete</button> -->
+                                                    <!-- editingRouteList.splice(editingRouteList.find((element) => element.id === item.id), 1) -->
+                                                </div>
+                                                
+                                            </div>
+                                            <!-- </div> -->
+                                        </div>
+                                    </div>
+
+                                </div>
+                                
+                            </div>
+                                
+                            <!-- </div> -->
+
+                        </div>
+                    </div>
+                    <div class="content_label">
+                        Manage Routes
+                    </div>
+                    <div class="content_block">
+                        <div v-if="showedRoute === ''" class="parametersList parametersListManageRoutes">
+                            <div class="frame_with_inputs_label">
+                                Import data
+                            </div>
+                            <div class="single_line_inp">
+                                <div class="single_line_inp_txt">
+                                    path to .json file
+                                </div>
+                                <input class="single_line_inp_edit">
+                            </div>
+                            <!-- v-if="editingRouteList.length !== 0" -->
+                            <div  class="BlockWithControlButtons removeMarginBottom">
+                                <button class="funcBtn" v-on:click="">Import</button>
+                                <button class="cancelBtn" v-on:click="">Cancel</button>
+                                <!-- editingRouteList.splice(editingRouteList.find((element) => element.id === item.id), 1) -->
+                            </div>
+                            <div class="frame_with_inputs_label">
+                                Export data
+                            </div>
+                            <div class="single_line_inp">
+                                <div class="single_line_inp_txt">
+                                    path to .json file
+                                </div>
+                                <input class="single_line_inp_edit">
+                            </div>
+                            <!-- v-if="editingRouteList.length !== 0" -->
+                            <div  class="BlockWithControlButtons removeMarginBottom">
+                                <button class="funcBtn" v-on:click="">Export</button>
+                                <button class="cancelBtn" v-on:click="">Cancel</button>
+                                <!-- editingRouteList.splice(editingRouteList.find((element) => element.id === item.id), 1) -->
+                            </div>
+                        </div>
+                            
+                        
+                        <div class="searchResultList">
+                        <!--     <div v-if="searchRoutesResult['userRoutes'].length === 0 && searchRoutesResult['autogeneratedRoutes'].length === 0" class="searchResultTitle">
+                                Just choose what interests you
+                            </div> -->
+                            <!-- v-if="searchRoutesResult['userRoutes'].length !== 0" -->
+                            <div class="searchResultTitle">
+                                List of all sights
+                            </div>
+                            
+                            
+                            <div v-for="(item, index) in allSights" class="searchResult">
+                                <div class="imagesView">
+                                    <div class="scroll-container">
+                                        <img src="/images/image1.jpg" alt="Cinque Terre">
+                                        <img src="/images/image2.jpg" alt="Forest">
+                                        <img src="/images/image3.jpg" alt="Northern Lights">
+                                        <!-- <img src="/images/image1.jpg" alt="Mountains"> -->
+                                      </div>
+                                </div>
+                                <div class="searchResultDescription">
+                                    <div class="descriptionTitle">
+                                        {{ item.name }}
+                                    </div>
+                                    <button class="save_btn" v-on:click="showedRoute = item; getShowedRouteList();">view info</button>
+                                    <!-- <div class="durationResult">
+                                        Duration
+                                    </div> -->
+                                    <div class="statisticResult">
+                                        10% longer than the direct route
+                                        <br>
+                                        50% more interesting than the direct route
+                                    </div>
+                                    <div class="routeTags">
+
+                                    </div>
+                                    
+                                </div>
+                                <div class="controlBtbs">
+                                    <!-- <div class="funcBtns">
+                                        <button class="funcBtn">
+                                            View User
+                                        </button>
+                                    </div> -->
+                                    <div class="evaluativeBtns">
+                                        <button class="save_btn">
+                                            Edit
+                                        </button>
+                                        <button class="cancel_btn">
+                                            Delete
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    
+                </div>
+
+                <div v-else-if="currentPage === 3">
+                    <div v-if="showedRoute !== ''" class="showRouteInfo">
+                        <div class="showRouteInfoContainer">
+                            <!-- <div class="showRouteInfoScrollBar"> -->
+                            <div class="showRouteInfoMainArea">
+                                <div class="showRouteInfoLeftArea">
+                                    <div class="searchResultTitle">
+                                        {{ showedRoute.name }}
+                                    </div>
+                                    <div class="targetAddress">
+                                        {{ showedRoute.description }}
+                                    </div>
+                                    <div class="BlockWithControlButtons removeMarginBottom">
+                                        <button class="funcBtn" v-on:click="">Route</button>
+                                        <!-- <button class="cancelBtn" v-on:click="tryToCancel">Cancel</button> -->
+                                        <button class="cancelBtn" v-on:click="showedRoute = ''; showedRouteList = []"> Close </button>
+                                       
+                                        <!-- editingRouteList.splice(editingRouteList.find((element) => element.id === item.id), 1) -->
+                                    </div>
+                                </div>
+                                <div class="showRouteInfoRightArea">
+                                    <div class="showContainedRoutesScrollBar">
+                                        <div v-for="(item, index) in showedRouteList" class="showContainedRoutesScrollBarAdaptation editRouteOnePoint">
+                                            <!-- <div class="target">     -->
+                                            <div class="editRouteOnePointImagesView">
+                                                <div class="scroll-container">
+                                                    <img src="/images/image1.jpg" alt="Cinque Terre">
+                                                    <img src="/images/image2.jpg" alt="Forest">
+                                                    <img src="/images/image3.jpg" alt="Northern Lights">
+                                                    <!-- <img src="/images/image1.jpg" alt="Mountains"> -->
+                                                </div>
+                                            </div>
+                                            <div class="targetDescription editRouteOnePointDescription" >
+                                                <div class="targetTitle">
+                                                    {{item.name}}
+                                                </div>
+                                                <div class="targetAddress ">
+                                                    Address: Рубинштейна 34
+                                                </div>
+                                                <div class="BlockWithControlButtons">
+                                                    <!-- <button class="funcBtn" v-on:click="swapTwoPlacesInEditingRouteList(index, index - 1)">Up</button>
+                                                    <button class="funcBtn" v-on:click="swapTwoPlacesInEditingRouteList(index + 1, index)">Down</button>
+                                                    <button class="deleteBtn" v-on:click="editingRouteList.splice(index, 1)">Delete</button> -->
+                                                    <!-- editingRouteList.splice(editingRouteList.find((element) => element.id === item.id), 1) -->
+                                                </div>
+                                                
+                                            </div>
+                                            <!-- </div> -->
+                                        </div>
+                                    </div>
+
+                                </div>
+                                
+                            </div>
+                                
+                            <!-- </div> -->
+
+                        </div>
+                    </div>
+                    <div class="content_label">
+                        Manage Users
+                    </div>
+                    <div class="content_block">
+                        <div v-if="showedRoute === ''" class="parametersList parametersListManageRoutes">
+                            <div class="frame_with_inputs_label">
+                                Import data
+                            </div>
+                            <div class="single_line_inp">
+                                <div class="single_line_inp_txt">
+                                    path to .json file
+                                </div>
+                                <input class="single_line_inp_edit">
+                            </div>
+                            <!-- v-if="editingRouteList.length !== 0" -->
+                            <div  class="BlockWithControlButtons removeMarginBottom">
+                                <button class="funcBtn" v-on:click="">Import</button>
+                                <button class="cancelBtn" v-on:click="">Cancel</button>
+                                <!-- editingRouteList.splice(editingRouteList.find((element) => element.id === item.id), 1) -->
+                            </div>
+                            <div class="frame_with_inputs_label">
+                                Export data
+                            </div>
+                            <div class="single_line_inp">
+                                <div class="single_line_inp_txt">
+                                    path to .json file
+                                </div>
+                                <input class="single_line_inp_edit">
+                            </div>
+                            <!-- v-if="editingRouteList.length !== 0" -->
+                            <div  class="BlockWithControlButtons removeMarginBottom">
+                                <button class="funcBtn" v-on:click="">Export</button>
+                                <button class="cancelBtn" v-on:click="">Cancel</button>
+                                <!-- editingRouteList.splice(editingRouteList.find((element) => element.id === item.id), 1) -->
+                            </div>
+                        </div>
+                            
+                        
+                        <div class="searchResultList">
+                        <!--     <div v-if="searchRoutesResult['userRoutes'].length === 0 && searchRoutesResult['autogeneratedRoutes'].length === 0" class="searchResultTitle">
+                                Just choose what interests you
+                            </div> -->
+                            <!-- v-if="searchRoutesResult['userRoutes'].length !== 0" -->
+                            <div class="searchResultTitle">
+                                List of Users
+                            </div>
+                            
+                            
+                            <div v-for="(item, index) in allUsers" class="searchResult">
+                                <div class="imagesView">
+                                    <div class="scroll-container">
+                                        <img src="/images/image1.jpg" alt="Cinque Terre">
+                                        <img src="/images/image2.jpg" alt="Forest">
+                                        <img src="/images/image3.jpg" alt="Northern Lights">
+                                        <!-- <img src="/images/image1.jpg" alt="Mountains"> -->
+                                      </div>
+                                </div>
+                                <div class="searchResultDescription">
+                                    <div class="descriptionTitle">
+                                        {{ item.name }}
+                                    </div>
+                                    <button class="save_btn" v-on:click="showedRoute = item; getShowedRouteList();">view info</button>
+                                    <!-- <div class="durationResult">
+                                        Duration
+                                    </div> -->
+                                    <div class="statisticResult">
+                                        10% longer than the direct route
+                                        <br>
+                                        50% more interesting than the direct route
+                                    </div>
+                                    <div class="routeTags">
+
+                                    </div>
+                                    
+                                </div>
+                                <div class="controlBtbs">
+                                    <!-- <div class="funcBtns">
+                                        <button class="funcBtn">
+                                            View User
+                                        </button>
+                                    </div> -->
+                                    <div class="evaluativeBtns">
+                                        <button class="save_btn">
+                                            Edit
+                                        </button>
+                                        <button class="cancel_btn">
+                                            Delete
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    
+                </div>
+                
+            </div>
+
+        </div>
+        <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+        <script src="OpenLayers/OpenLayers.js"></script>
+
+        <script src="admin.js"></script>
+
+
+
+
+        <script>
+            // map = new OpenLayers.Map("demoMap");
+            // map.addLayer(new OpenLayers.Layer.OSM());
+            // map.zoomToMaxExtent();
+        </script>
+    </body>
+</html>

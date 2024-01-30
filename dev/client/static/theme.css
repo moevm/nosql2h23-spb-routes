@@ -1355,6 +1355,40 @@ div.scroll-container {
     width: 100%;
 }
 
+.admiPanelMapTitle {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center; 
+    font-size: large;
+    font-weight: bold;
+    height: 15%;
+}
+
+
+.parametersListAdminPanelExtention {
+    width: 25%;
+}
+
+.showRouteInfoLeftAreaAdminPanelExtention {
+    justify-content: space-between;
+    width: 100%;
+}
+
+.editRouteOnePointImagesViewAdminPanelExtention {
+    width: 98%;
+}
+
+
+.searchResultTitleAdminPanelExtention {
+    margin: 5px;
+}
+
+.parametersListManageRoutes {
+    width: 25%;
+    margin-left: 5%;
+}
+
 .book_photo_preview {
 
     height: 174px;

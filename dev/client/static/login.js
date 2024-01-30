@@ -68,16 +68,16 @@ const App = {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             }
-            }).then((response) => response.json()).then((json) => {localStorage.access_token = json.access_token; 
+            }).then((response) => {window.location.href = response.url; response.json(); json}).then((json) => {localStorage.access_token = json.access_token; 
                 
                 // window.location.href = '/';
-                fetch('/redirect_to_main_page', {
-                    method: 'GET',
-                    redirect: 'follow',
-                    headers: {
-                      Authorization: 'Bearer '+ localStorage.access_token ,  
-                    }
-                  }).then((response) => {window.location.href = response.url;});//window.location.replace(response));// console.log(response));
+                // fetch('/redirect_to_main_page', {
+                //     method: 'GET',
+                //     redirect: 'follow',
+                //     headers: {
+                //       Authorization: 'Bearer '+ localStorage.access_token ,  
+                //     }
+                //   }).then((response) => {window.location.href = response.url;});//window.location.replace(response));// console.log(response));
             });
         },
 
