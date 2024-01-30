@@ -31,7 +31,7 @@ app = FastAPI()
 class NotAuthenticatedException(Exception):
     pass
 
-manager = LoginManager(SECRET, token_url='/auth/token', custom_exception=NotAuthenticatedException)
+manager = LoginManager(SECRET, token_url='/auth/token', custom_exception=NotAuthenticatedException, use_cookie=True)
 
 fake_db = ServerLogic()# {'drdrew': {'password': '2301'}}
 
@@ -65,8 +65,31 @@ def login(data: OAuth2PasswordRequestForm = Depends()):
     access_token = manager.create_access_token(
         data=dict(sub=email)
     )
-    return {'access_token': access_token, 'token_type': 'bearer'}
+    print(access_token, flush=True)
+    # return {'access_token': access_token, 'token_type': 'bearer'}
+    resp = RedirectResponse(url="/")
 
+    manager.set_cookie(resp, access_token)
+    return resp
+
+
+# @app.post("/logout")
+# async def logout(response: Response):
+#     response.delete_cookie("bearer")
+#     resp = RedirectResponse(url="/login")
+#     return resp
+@app.get("/logout")
+async def logout(request: Request, user = Depends(manager)):
+    # Also tried following two comment lines
+    # response.delete_cookie("access_token", domain="localhost")
+    print(request.cookies.get('access-token'), flush=True)
+    # response = templates.TemplateResponse("login.html", {"request": request, "title": "Login", "current_user": AnonymousUser()})
+    response = RedirectResponse(url="/login", headers={'Authorization': ''})
+    # response.set_cookie("")
+    response.delete_cookie("access-token", domain="localhost")
+    # response.set_cookie(key='access-token', value="", max_age=1)
+    
+    return response
 
 
 @app.post('/auth/create/user')
@@ -118,10 +141,11 @@ def redirect_to_main_page(request: Request, user=Depends(manager)):
     return RedirectResponse(url='/', headers={'Authorization': 'Bearer '+ Authorization})
 
 
+
 @app.get('/')
-def protected_route():#request: Request, user=Depends(manager)):
+def protected_route(request: Request, user=Depends(manager)):
     print("protected_route")
-    # print(request.headers.get('Authorization'), flush=True)
+    print(request.headers.get('Authorization'), flush=True)
     return FileResponse(os.path.join(pages_path, "index.html"))
 
 
@@ -160,6 +184,20 @@ def searchSutableRoutes (body= Body()):
     print(body, flush=True)
     return fake_db.searchSutableRoutes(body)
 
+
+
+@app.get('/admin')
+def protected_route():#request: Request, user=Depends(manager)):
+    print("protected_route")
+    # print(request.headers.get('Authorization'), flush=True)
+    return FileResponse(os.path.join(pages_path, "admin.html"))
+
+@app.post('/get/all/routes')
+def getAllRoutes(body= Body()):
+    body = json.loads(body)
+
+    print(body, flush=True)
+    return fake_db.getAllRoutes(body)
 
 
 app.mount("/", StaticFiles(directory=os.path.abspath(os.path.join( os.path.dirname(__file__), '..', 'client', 'static'))), name="static")
