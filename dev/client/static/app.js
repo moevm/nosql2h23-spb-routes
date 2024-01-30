@@ -9,7 +9,9 @@ const App = {
             title: "список заметок",
             inputValue: "",
 
-
+            numberOfSightsOnTheRoute : 5,
+            showMapToSelectStartPosition : false,
+            showMapToSelectEndPosition : false,
 
             newsListLeft : [
                 {
@@ -102,8 +104,16 @@ const App = {
 
             showedRouteList : [],
 
+            currentUser : '',
+
+
+            selectedStrtPoint : '',
+            selectedEndPoint : '',
 
         }
+    },
+    mounted() {
+        this.getCurrentUser();
     },
 
     updated(){
@@ -113,6 +123,9 @@ const App = {
         if (this.currentPage == 1) {
             if (this.avaliableTagsExactlyYes.length === 0 && this.avaliableTagsExactlyNo.length === 0)
             this.getPreferences();
+            if (this.showMapToSelectStartPosition || this.showMapToSelectEndPosition) {
+                this.startMapForSelectingStartPosition()
+            }
         }
         if (this.currentPage == 2) {
             console.log("map updated");
@@ -129,11 +142,88 @@ const App = {
             
         }
         if (this.currentPage == 4) {
-            
+            // this.getUserData();
         }
     },
 
     methods : {
+
+        startMapForSelectingStartPosition() {
+            console.log("map called", document.getElementById("demoMap"));
+            
+            
+            var lat            = 59.9275;
+            var lon            = 30.3346;
+            var zoom           = 12;
+
+            var fromProjection = new OpenLayers.Projection("EPSG:4326");   // Transform from WGS 1984
+            var toProjection   = new OpenLayers.Projection("EPSG:900913"); // to Spherical Mercator Projection
+            var position       = new OpenLayers.LonLat(lon, lat).transform( fromProjection, toProjection);
+
+            map = new OpenLayers.Map("demoMap");
+            var mapnik         = new OpenLayers.Layer.OSM();
+            map.addLayer(mapnik);
+
+            
+            var markers = new OpenLayers.Layer.Markers("Markers");
+            
+            
+            //  console.log(map);
+            map.addLayer(markers);
+
+            
+
+            map.setCenter(position, zoom);
+
+            console.log(map);
+            map.events.register("click", map, (evt)=> {
+                markers.clearMarkers();
+                
+                // getSightsPoins(map);
+                console.log(evt.xy);
+                // console.log(new OpenLayers.LonLat(evt.xy.x, evt.x.y)
+                //console.log(evt.xy.transform(toProjection, fromProjection ));
+                var lonlat = map.getLonLatFromPixel(evt.xy);
+                var converted = lonlat.transform(map.getProjectionObject(), new OpenLayers.Projection("EPSG:4326"));
+                console.log(converted);
+                if (this.showMapToSelectStartPosition)
+                    this.selectedStrtPoint = converted;
+                if (this.showMapToSelectEndPosition)
+                    this.selectedEndPoint = converted;
+
+                // markers.addMarker(new OpenLayers.Marker(converted));
+                // var lonLat = new OpenLayers.LonLat(converted.lon, converted.lat);
+                var lonLat = new OpenLayers.LonLat(converted.lon, converted.lat).transform( fromProjection, toProjection);
+                var marker = new OpenLayers.Marker(lonLat); //, icon.clone()
+                        
+                markers.addMarker(marker);
+            });
+
+            
+                
+            
+        },
+
+        getCurrentUser() {
+            fetch("/get/current/user", 
+                    {
+                        method: "POST",
+                        body: JSON.stringify({ 
+                            getUser : true,
+                        }),
+                        headers: {
+                            "Content-Type": "application/x-www-form-urlencoded"
+                            // Authorization: 'Bearer '+ localStorage.access_token ,
+                        }
+                        }
+                        ).then((response) => response.json()).then((json) => {
+                        
+                            // updateSightsPoints(JSON.parse(json)['sights']);
+                            console.log(json);
+                            // console.log(this.showedRouteList)
+                            this.currentUser = json;
+                });
+        },
 
         getShowedRouteList() {
             // console.log(id);
@@ -167,9 +257,9 @@ const App = {
                     body: JSON.stringify({ 
                         startTime : this.startTime,
                         endTime : this.endTime,
-                        fromWhere : this.fromWhere,
-                        where : this.where,
-            
+                        selectedStrtPoint : this.selectedStrtPoint,
+                        selectedEndPoint : this.selectedEndPoint,
+                        numberOfSightsOnTheRoute : this.numberOfSightsOnTheRoute,
             
                         selectedTagsExactlyYes : this.selectedTagsExactlyYes,
                         selectedTagsExactlyNo : this.selectedTagsExactlyNo,
@@ -475,6 +565,7 @@ const App = {
                         // updateSightsPoints(JSON.parse(json)['sights']);
                         console.log(json);
                         this.selectedOnRouteEditMapSight = json
+                        console.log(this.selectedOnRouteEditMapSight, "this.selectedOnRouteEditMapSight");
                 });
                 
         },

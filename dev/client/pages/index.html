@@ -168,7 +168,7 @@
                                                     {{item.name}}
                                                 </div>
                                                 <div class="targetAddress ">
-                                                    Address: Рубинштейна 34
+                                                    Address: {{item.lon}} {{item.lat}}
                                                 </div>
                                                 <div class="BlockWithControlButtons">
                                                     <!-- <button class="funcBtn" v-on:click="swapTwoPlacesInEditingRouteList(index, index - 1)">Up</button>
@@ -190,11 +190,51 @@
 
                         </div>
                     </div>
+                    <div v-if="showMapToSelectStartPosition" class="showRouteInfo">
+                        <div class="showRouteInfoContainer">
+                            <!-- <div class="showRouteInfoScrollBar"> -->
+                            <div class="showRouteInfoMainArea">
+                                <div class="selectStartPointOnMap">
+                                    <div class="mapHolder">
+                                        <div id="demoMap" class="map"></div>
+                                    </div>
+                                    <div class="BlockWithControlButtons removeMarginBottom">
+                                        <button class="funcBtn" v-on:click="showMapToSelectStartPosition = !showMapToSelectStartPosition;">Select </button>
+                                        <button class="cancelBtn" v-on:click="showMapToSelectStartPosition = !showMapToSelectStartPosition; selectedStrtPoint=''">Cancel</button>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                                
+                            <!-- </div> -->
+
+                        </div>
+                    </div>
+                    <div v-if="showMapToSelectEndPosition" class="showRouteInfo">
+                        <div class="showRouteInfoContainer">
+                            <!-- <div class="showRouteInfoScrollBar"> -->
+                            <div class="showRouteInfoMainArea">
+                                <div class="selectStartPointOnMap">
+                                    <div class="mapHolder">
+                                        <div id="demoMap" class="map"></div>
+                                    </div>
+                                    <div class="BlockWithControlButtons removeMarginBottom">
+                                        <button class="funcBtn" v-on:click="showMapToSelectEndPosition = !showMapToSelectEndPosition;">Select </button>
+                                        <button class="cancelBtn" v-on:click="showMapToSelectEndPosition = !showMapToSelectEndPosition; selectedEndPoint=''">Cancel</button>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                                
+                            <!-- </div> -->
+
+                        </div>
+                    </div>
                     <div class="content_label">
                         Find the most suitable routes
                     </div>
                     <div class="content_block">
-                        <div v-if="showedRoute === ''" v-bind:class="showedRoute === '' ? 'parametersList' : 'parametersListHidden'">
+                        <div v-if="showedRoute === '' && !showMapToSelectStartPosition && !showMapToSelectEndPosition" v-bind:class="showedRoute === '' ? 'parametersList' : 'parametersListHidden'">
                             <div class="frame_with_inputs_label">
                                 Route parametres
                             </div>
@@ -210,17 +250,51 @@
                                 </div>
                                 <input class="single_line_inp_edit" v-model="endTime">
                             </div>
-                            <div class="single_line_inp">
-                                <div class="single_line_inp_txt">
-                                    From where
+                            
+                            <div class="tagInput">
+                                <div class="removeMargin single_line_inp ">
+                                    <div v-if="selectedStrtPoint === ''" class="single_line_inp_txt">
+                                        Or select your current position on map
+                                    </div>
+                                    <div v-if="selectedStrtPoint !== ''" class="single_line_inp_txt">
+                                        Selected start point: <br>
+                                        lon = {{selectedStrtPoint.lon}} <br>
+                                        lat = {{selectedStrtPoint.lat}}
+                                    </div>
+                                    
                                 </div>
-                                <input class="single_line_inp_edit" v-model="fromWhere">
+                                <div class="BlockWithControlButtons removeMarginBottom">
+                                    <button class="funcBtn" v-on:click="showMapToSelectStartPosition = !showMapToSelectStartPosition">select on map</button>
+                                </div>
                             </div>
-                            <div class="single_line_inp">
-                                <div class="single_line_inp_txt">
-                                    Where
+                            <div class="tagInput">
+                                <div class="removeMargin single_line_inp ">
+                                    <div v-if="selectedEndPoint === ''" class="single_line_inp_txt">
+                                        Select your finish position on map
+                                    </div>
+                                    <div v-if="selectedEndPoint !== ''" class="single_line_inp_txt">
+                                        Selected finish point: <br>
+                                        lon = {{selectedEndPoint.lon}} <br>
+                                        lat = {{selectedEndPoint.lat}}
+                                    </div>
+                                    
                                 </div>
-                                <input class="single_line_inp_edit" v-model="where">
+                                <div class="BlockWithControlButtons removeMarginBottom">
+                                    <button class="funcBtn" v-on:click="showMapToSelectEndPosition = !showMapToSelectEndPosition">select on map</button>
+                                </div>
+                            </div>
+                            <div class="tagInput">
+                                <div class="removeMargin single_line_inp ">
+                                    <div class="single_line_inp_txt">
+                                        Number of sights on the route {{numberOfSightsOnTheRoute}}
+                                    </div>
+                                    
+                                </div>
+                                <div class="listOfSelectedTags">
+                                    <input type="range" min="0" max="10" step="1" v-model="numberOfSightsOnTheRoute" class="draggingInput">
+                                    
+                                </div>
+                                
                             </div>
                             
                             <div class="frame_with_inputs_label">
@@ -409,7 +483,7 @@
                                         Name {{item}}
                                     </div>
                                     <div class="targetAddress">
-                                        Address: Рубинштейна 34
+                                        Address: {{item}}
                                     </div>
                                     
                                 </div>
@@ -432,7 +506,7 @@
                                         Name {{item}}
                                     </div>
                                     <div class="targetAddress">
-                                        Address: Рубинштейна 34
+                                        Address: {{item}}
                                     </div>
                                     
                                 </div>
@@ -455,7 +529,7 @@
                                         Name {{item}}
                                     </div>
                                     <div class="targetAddress">
-                                        Address: Рубинштейна 34
+                                        Address: {{item}}
                                     </div>
                                     
                                 </div>
@@ -581,7 +655,7 @@
                                             {{item.name}}
                                         </div>
                                         <div class="targetAddress ">
-                                            Address: Рубинштейна 34
+                                            Address: {{item.lon}} {{item.lat}}
                                         </div>
                                         <div class="BlockWithControlButtons">
                                             <button class="funcBtn" v-on:click="swapTwoPlacesInEditingRouteList(index, index - 1)">Up</button>
@@ -633,7 +707,8 @@
                                                     {{ selectedOnRouteEditMapSight.name }}
                                                 </div>
                                                 <div class="targetAddress ">
-                                                    Address: Рубинштейна 34
+                                                    Address: {{ selectedOnRouteEditMapSight.lon }} {{ selectedOnRouteEditMapSight.lat }}
+
                                                 </div>
                                                 <div class="BlockWithAddBtn">
                                                     <button class="funcBtn" v-on:click="editingRouteList.push(selectedOnRouteEditMapSight);selectedOnRouteEditMapSight=''">Add to route</button>
@@ -655,10 +730,10 @@
                             </div>
                             <div class="profileInfo">
                                 <div class="profileUsername">
-                                    John Doe
+                                    {{ currentUser.firstName }} {{ currentUser.lastName }}
                                 </div>
                                 <div class="profileAddress">
-                                    Saint Petersburg, RU
+                                    {{ currentUser.address }}
                                 </div>
                                 <div>
                                     <button class="editProfileBtn">Edit profile</button>

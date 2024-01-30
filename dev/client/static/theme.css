@@ -561,6 +561,11 @@ div.scroll-container {
     position: fixed;
 }
 
+.selectStartPointOnMap {
+    width : 100%;
+    height: 100%;
+}
+
 .addNewRouteMap {
     width: 45%;
     min-width: 200px;
@@ -1387,6 +1392,11 @@ div.scroll-container {
 .parametersListManageRoutes {
     width: 25%;
     margin-left: 5%;
+}
+
+.draggingInput {
+    width:94%;
+    margin : 3%;
 }
 
 .book_photo_preview {
