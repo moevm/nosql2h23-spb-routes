@@ -12,7 +12,8 @@ headers = {
     'X-RapidAPI-Host': "opentripmap-places-v1.p.rapidapi.com"
 }
 
-conn.request("GET", "/en/places/bbox?lon_max=30.420626&lat_min=59.884713&lon_min=30.348598&lat_max=59.939402", headers=headers)
+conn.request("GET", "/en/places/bbox?lon_max=30.3450&lat_min=59.9325&lon_min=30.3307&lat_max=59.9372", headers=headers)
+# conn.request("GET", "/en/places/bbox?lon_max=30.420626&lat_min=59.884713&lon_min=30.348598&lat_max=59.939402", headers=headers)
 
 res = conn.getresponse()
 data = res.read()

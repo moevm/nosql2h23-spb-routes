@@ -28,6 +28,9 @@ const App = {
 
             allUserRoutes: '',
 
+            successfullImport : '',
+            successfullExport : '',
+
         }
     },
 
@@ -58,6 +61,61 @@ const App = {
     },
 
     methods : {
+        importData() {
+            fetch("/data/import", 
+                {
+                    method: "POST",
+                    body: JSON.stringify({ 
+                        placeholder : "None"
+                        
+                    }),
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded"
+                        // Authorization: 'Bearer '+ localStorage.access_token ,
+                    }
+                    }
+                    ).then((response) => response.json()).then((json) => {
+                        // console.log('json[sights] = ', json['sights']);
+                        // console.log('json[sights] = ',  JSON.parse(json)['sights']);
+
+                        // updateSightsPoints(JSON.parse(json)['sights']);
+                        console.log(json);
+                        if (json["success"] === 'ok')
+                            this.successfullImport = true;
+                        else
+                           this.successfullImport = false;
+                    // this.deleteEditing();
+                    // this.tryToCancel()
+            });
+        },
+        exportData () {
+            fetch("/data/export", 
+                {
+                    method: "POST",
+                    body: JSON.stringify({ 
+                        placeholder : "None"
+                        
+                    }),
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded"
+                        // Authorization: 'Bearer '+ localStorage.access_token ,
+                    }
+                    }
+                    ).then((response) => response.json()).then((json) => {
+                        // console.log('json[sights] = ', json['sights']);
+                        // console.log('json[sights] = ',  JSON.parse(json)['sights']);
+
+                        // updateSightsPoints(JSON.parse(json)['sights']);
+                        console.log(json);
+                        if (json["success"] === 'ok')
+                            this.successfullExport = true;
+                        else
+                           this.successfullExport = false;
+                    // this.deleteEditing();
+                    // this.tryToCancel()
+            });
+        },
+
         getShowedRouteList() {
             // console.log(id);
             for (let i = 0; i < this.showedRoute["sightsSubsequenceIds"].length; i += 1){

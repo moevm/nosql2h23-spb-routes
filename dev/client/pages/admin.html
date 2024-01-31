@@ -74,6 +74,38 @@
 
                         </div>
                     </div>
+                    <div v-if="successfullImport !== '' || successfullExport !== ''" class="showRouteInfo">
+                        <div class="showRouteInfoContainer">
+                            <!-- <div class="showRouteInfoScrollBar"> -->
+                            <div class="showRouteInfoMainArea">
+                                <dev class="callbackMessage">
+                                    <div v-if="successfullImport === true">
+                                            Data was successfully imported
+                                            <button class="funcBtn" v-on:click="successfullImport = ''; console.log(successfullImport, successfullExport);">Great!</button>
+                                    </div>
+                                    <div v-if="successfullExport === true">
+                                            Data was successfully exported
+                                            <button class="funcBtn" v-on:click="successfullExport = ''">Great!</button>
+
+                                    </div>
+                                    <div v-if="successfullImport === false">
+                                        Data import was failed
+                                        <button class="funcBtn" v-on:click="successfullImport = ''; console.log(successfullImport, successfullExport);"> Well well...</button>
+                                    </div>
+                                    <div v-if="successfullExport === false">
+                                            Data export was failed
+                                            <button class="funcBtn" v-on:click="successfullExport = ''">Well well...</button>
+
+                                    </div>
+                                </dev>
+                                
+                            </div>
+                                
+                            <!-- </div> -->
+
+                        </div>
+                    </div>
+                    
                     
                     <div>  
                         <div class="content_label">
@@ -81,20 +113,22 @@
                         </div>
                         <div class="content_block">
                             
-                            <div v-if="showedPlace === ''" class="parametersList parametersListAdminPanelExtention">
+                            <div v-if="showedPlace === '' && successfullImport === '' && successfullExport === ''" class="parametersList parametersListAdminPanelExtention">
                                 <div class="frame_with_inputs_label">
                                     Import data
                                 </div>
                                 <div class="single_line_inp">
                                     <div class="single_line_inp_txt">
-                                        path to .json file
+                                        Data will be imported from "app.json" in mounted "import" directory
+
                                     </div>
-                                    <input class="single_line_inp_edit">
+                                    <!-- <input class="single_line_inp_edit"> -->
+
                                 </div>
                                 <!-- v-if="editingRouteList.length !== 0" -->
                                 <div  class="BlockWithControlButtons removeMarginBottom">
-                                    <button class="funcBtn" v-on:click="">Import</button>
-                                    <button class="cancelBtn" v-on:click="">Cancel</button>
+                                    <button class="funcBtn" v-on:click="importData">Import</button>
+                                    <!-- <button class="cancelBtn" v-on:click="">Cancel</button> -->
                                     <!-- editingRouteList.splice(editingRouteList.find((element) => element.id === item.id), 1) -->
                                 </div>
                                 <div class="frame_with_inputs_label">
@@ -102,18 +136,18 @@
                                 </div>
                                 <div class="single_line_inp">
                                     <div class="single_line_inp_txt">
-                                        path to .json file
+                                        Data will be exported to "app.json" in mounted "import" directory
                                     </div>
-                                    <input class="single_line_inp_edit">
+                                    <!-- <input class="single_line_inp_edit"> -->
                                 </div>
                                 <!-- v-if="editingRouteList.length !== 0" -->
                                 <div  class="BlockWithControlButtons removeMarginBottom">
-                                    <button class="funcBtn" v-on:click="">Export</button>
-                                    <button class="cancelBtn" v-on:click="">Cancel</button>
+                                    <button class="funcBtn" v-on:click="exportData">Export</button>
+                                    <!-- <button class="cancelBtn" v-on:click="">Cancel</button> -->
                                     <!-- editingRouteList.splice(editingRouteList.find((element) => element.id === item.id), 1) -->
                                 </div>
                             </div>
-                            <div v-if="showedPlace === ''" class="addNewPlaceMap">
+                            <div v-if="showedPlace === '' && successfullImport === '' && successfullExport === ''" class="addNewPlaceMap">
                                 <div class="mapHolder">
                                     <div id="demoMap" class="map"></div>
                                 </div>

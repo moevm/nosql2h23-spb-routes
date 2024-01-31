@@ -566,6 +566,16 @@ div.scroll-container {
     height: 100%;
 }
 
+.callbackMessage {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+}
+
 .addNewRouteMap {
     width: 45%;
     min-width: 200px;
