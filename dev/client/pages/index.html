@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Path Finder</title>
+        <link href='https://fonts.googleapis.com/css?family=Inter' rel='stylesheet'>
+        <link rel="stylesheet" href="theme.css" />
+    </head>
+
+    <body>
+        <div class="container pt-5" id="app">
+            <div class="Topbar">
+                <div class="NavigationBtnsArea">
+                    <button v-on:click="currentPage=0" v-bind:class="[currentPage==0 ? 'NavigationBtnActive':'NavigationBtn']" >
+                        <!-- class="NavigationBtn"v-class="{Active: currentPage==0}" -->
+                        What's new
+                    </button>
+                    <button v-on:click="currentPage=1" v-bind:class="[currentPage==1 ? 'NavigationBtnActive':'NavigationBtn']" >
+                        Find
+                    </button>
+                    <button v-on:click="currentPage=2" v-bind:class="[currentPage==2 ? 'NavigationBtnActive':'NavigationBtn']" >
+                        Route
+                    </button>
+                    <button v-on:click="currentPage=3" v-bind:class="[currentPage==3 ? 'NavigationBtnActive':'NavigationBtn']" >
+                        Add
+                    </button>
+                    <button v-on:click="currentPage=4" v-bind:class="[currentPage==4 ? 'NavigationBtnActive':'NavigationBtn']" >
+                        User
+                    </button>
+                </div>
+            </div>
+
+            <div class="main_pannel">
+                <div v-if="currentPage === 0">
+                    <div class="page">
+                        <div class="content_label">
+                            Routes and places you might like
+                            
+                        </div>
+                        
+                        <div class="content_block">
+                            <div class="newsList">
+                                <div class="leftColumn">
+                                    <div v-for="(item, index) in newsListLeft" v-bind:class="[index==0 ? 'newsShort':'news']">
+                                        
+                                        <!-- class="news" -->
+                                        <!-- {{ item.description }} -->
+                                        <!-- <div v-if="index==0">
+
+                                        </div> -->
+                                        <div v-if="item.type==='topic'" class="newsTopic">
+                                            <div class="topicTitle">
+                                                {{ item.title }}
+                                            </div>
+                                            <div class="topicDescription">
+                                                {{ item.description }}
+                                            </div>
+                                            <div class="">
+                                                <button>view all...</button>
+                                            </div>
+                                        </div>
+                                        <div v-if="item.type!=='topic'" v-bind:class="[index==0 ? 'newsNotTopicShort':'newsNotTopic']">
+                                            <div v-bind:class="[index==0 ? 'newsImagesViewShort':'newsImagesView']">
+                                                <div class="newsScrollContainer">
+                                                    <img src="/images/image1.jpg" alt="Cinque Terre">
+                                                    <img src="/images/image2.jpg" alt="Forest">
+                                                    <img src="/images/image3.jpg" alt="Northern Lights">
+                                                    <!-- <img src="/images/image1.jpg" alt="Mountains"> -->
+                                                </div>
+
+                                                    
+                                                
+                                            </div>
+                                            <div class="topicInfo">    
+                                                <div class="topicTitle">
+                                                    {{ item.title }}
+                                                </div>
+                                                <div class="topicDescription">
+                                                    {{ item.description }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="rightColumn">
+                                    <div v-for="(item, index) in newsListLeft" class="news">
+                                        
+                                        <!-- class="news" -->
+                                        <!-- {{ item.description }} -->
+                                        <!-- <div v-if="index==0">
+
+                                        </div> -->
+                                        <div v-if="item.type==='topic'" class="newsTopic">
+                                            <div class="topicTitle">
+                                                {{ item.title }}
+                                            </div>
+                                            <div class="topicDescription">
+                                                {{ item.description }}
+                                            </div>
+                                            <div class="">
+                                                <button>view all...</button>
+                                            </div>
+                                        </div>
+                                        <div v-if="item.type!=='topic'" class="newsNotTopic">
+                                            <div class="newsImagesView'">
+                                                <div class="newsScrollContainer">
+                                                    <img src="/images/image1.jpg" alt="Cinque Terre">
+                                                    <img src="/images/image2.jpg" alt="Forest">
+                                                    <img src="/images/image3.jpg" alt="Northern Lights">
+                                                    <!-- <img src="/images/image1.jpg" alt="Mountains"> -->
+                                                </div>
+
+                                                    
+                                                
+                                            </div>
+                                            <div class="topicInfo">    
+                                                <div class="topicTitle">
+                                                    {{ item.title }}
+                                                </div>
+                                                <div class="topicDescription">
+                                                    {{ item.description }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div v-else-if="currentPage === 1">
+                    <div v-if="showedRoute !== ''" class="showRouteInfo">
+                        <div class="showRouteInfoContainer">
+                            <!-- <div class="showRouteInfoScrollBar"> -->
+                            <div class="showRouteInfoMainArea">
+                                <div class="showRouteInfoLeftArea">
+                                    <div class="searchResultTitle">
+                                        {{ showedRoute.name }}
+                                    </div>
+                                    <div class="targetAddress">
+                                        {{ showedRoute.description }}
+                                    </div>
+                                    <div class="BlockWithControlButtons removeMarginBottom">
+                                        <button class="funcBtn" v-on:click="">Route</button>
+                                        <!-- <button class="cancelBtn" v-on:click="tryToCancel">Cancel</button> -->
+                                        <button class="cancelBtn" v-on:click="showedRoute = ''; showedRouteList = []"> Close </button>
+                                       
+                                        <!-- editingRouteList.splice(editingRouteList.find((element) => element.id === item.id), 1) -->
+                                    </div>
+                                </div>
+                                <div class="showRouteInfoRightArea">
+                                    <div class="showContainedRoutesScrollBar">
+                                        <div v-for="(item, index) in showedRouteList" class="showContainedRoutesScrollBarAdaptation editRouteOnePoint">
+                                            <!-- <div class="target">     -->
+                                            <div class="editRouteOnePointImagesView">
+                                                <div class="scroll-container">
+                                                    <img src="/images/image1.jpg" alt="Cinque Terre">
+                                                    <img src="/images/image2.jpg" alt="Forest">
+                                                    <img src="/images/image3.jpg" alt="Northern Lights">
+                                                    <!-- <img src="/images/image1.jpg" alt="Mountains"> -->
+                                                </div>
+                                            </div>
+                                            <div class="targetDescription editRouteOnePointDescription" >
+                                                <div class="targetTitle">
+                                                    {{item.name}}
+                                                </div>
+                                                <div class="targetAddress ">
+                                                    Address: {{item.lon}} {{item.lat}}
+                                                </div>
+                                                <div class="BlockWithControlButtons">
+                                                    <!-- <button class="funcBtn" v-on:click="swapTwoPlacesInEditingRouteList(index, index - 1)">Up</button>
+                                                    <button class="funcBtn" v-on:click="swapTwoPlacesInEditingRouteList(index + 1, index)">Down</button>
+                                                    <button class="deleteBtn" v-on:click="editingRouteList.splice(index, 1)">Delete</button> -->
+                                                    <!-- editingRouteList.splice(editingRouteList.find((element) => element.id === item.id), 1) -->
+                                                </div>
+                                                
+                                            </div>
+                                            <!-- </div> -->
+                                        </div>
+                                    </div>
+
+                                </div>
+                                
+                            </div>
+                                
+                            <!-- </div> -->
+
+                        </div>
+                    </div>
+                    <div v-if="showMapToSelectStartPosition" class="showRouteInfo">
+                        <div class="showRouteInfoContainer">
+                            <!-- <div class="showRouteInfoScrollBar"> -->
+                            <div class="showRouteInfoMainArea">
+                                <div class="selectStartPointOnMap">
+                                    <div class="mapHolder">
+                                        <div id="demoMap" class="map"></div>
+                                    </div>
+                                    <div class="BlockWithControlButtons removeMarginBottom">
+                                        <button class="funcBtn" v-on:click="showMapToSelectStartPosition = !showMapToSelectStartPosition;">Select </button>
+                                        <button class="cancelBtn" v-on:click="showMapToSelectStartPosition = !showMapToSelectStartPosition; selectedStrtPoint=''">Cancel</button>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                                
+                            <!-- </div> -->
+
+                        </div>
+                    </div>
+                    <div v-if="showMapToSelectEndPosition" class="showRouteInfo">
+                        <div class="showRouteInfoContainer">
+                            <!-- <div class="showRouteInfoScrollBar"> -->
+                            <div class="showRouteInfoMainArea">
+                                <div class="selectStartPointOnMap">
+                                    <div class="mapHolder">
+                                        <div id="demoMap" class="map"></div>
+                                    </div>
+                                    <div class="BlockWithControlButtons removeMarginBottom">
+                                        <button class="funcBtn" v-on:click="showMapToSelectEndPosition = !showMapToSelectEndPosition;">Select </button>
+                                        <button class="cancelBtn" v-on:click="showMapToSelectEndPosition = !showMapToSelectEndPosition; selectedEndPoint=''">Cancel</button>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                                
+                            <!-- </div> -->
+
+                        </div>
+                    </div>
+                    <div class="content_label">
+                        Find the most suitable routes
+                    </div>
+                    <div class="content_block">
+                        <div v-if="showedRoute === '' && !showMapToSelectStartPosition && !showMapToSelectEndPosition" v-bind:class="showedRoute === '' ? 'parametersList' : 'parametersListHidden'">
+                            <div class="frame_with_inputs_label">
+                                Route parametres
+                            </div>
+                            <div class="single_line_inp">
+                                <div class="single_line_inp_txt">
+                                    Start time
+                                </div>
+                                <input class="single_line_inp_edit" v-model="startTime">
+                            </div>
+                            <div class="single_line_inp">
+                                <div class="single_line_inp_txt">
+                                    End time
+                                </div>
+                                <input class="single_line_inp_edit" v-model="endTime">
+                            </div>
+                            
+                            <div class="tagInput">
+                                <div class="removeMargin single_line_inp ">
+                                    <div v-if="selectedStrtPoint === ''" class="single_line_inp_txt">
+                                        Or select your current position on map
+                                    </div>
+                                    <div v-if="selectedStrtPoint !== ''" class="single_line_inp_txt">
+                                        Selected start point: <br>
+                                        lon = {{selectedStrtPoint.lon}} <br>
+                                        lat = {{selectedStrtPoint.lat}}
+                                    </div>
+                                    
+                                </div>
+                                <div class="BlockWithControlButtons removeMarginBottom">
+                                    <button class="funcBtn" v-on:click="showMapToSelectStartPosition = !showMapToSelectStartPosition">select on map</button>
+                                </div>
+                            </div>
+                            <div class="tagInput">
+                                <div class="removeMargin single_line_inp ">
+                                    <div v-if="selectedEndPoint === ''" class="single_line_inp_txt">
+                                        Select your finish position on map
+                                    </div>
+                                    <div v-if="selectedEndPoint !== ''" class="single_line_inp_txt">
+                                        Selected finish point: <br>
+                                        lon = {{selectedEndPoint.lon}} <br>
+                                        lat = {{selectedEndPoint.lat}}
+                                    </div>
+                                    
+                                </div>
+                                <div class="BlockWithControlButtons removeMarginBottom">
+                                    <button class="funcBtn" v-on:click="showMapToSelectEndPosition = !showMapToSelectEndPosition">select on map</button>
+                                </div>
+                            </div>
+                            <div class="tagInput">
+                                <div class="removeMargin single_line_inp ">
+                                    <div class="single_line_inp_txt">
+                                        Number of sights on the route {{numberOfSightsOnTheRoute}}
+                                    </div>
+                                    
+                                </div>
+                                <div class="listOfSelectedTags">
+                                    <input type="range" min="0" max="5" step="1" v-model="numberOfSightsOnTheRoute" class="draggingInput">
+                                    
+                                </div>
+                                
+                            </div>
+                            
+                            <div class="frame_with_inputs_label">
+                                Preferences
+                            </div>
+                            <div class="tagInput">
+                                <div class="removeMargin single_line_inp ">
+                                    <div class="single_line_inp_txt">
+                                        Exactly yes 
+                                    </div>
+                                    <!-- selectedTagsExactlyYes -->
+                                    
+                                    <!-- <input class="single_line_inp_edit" list="ExactlyYesTags" autocomplete="on" text="selectedTagsExactlyYes">
+                                    <datalist id="ExactlyYesTags" class="tagSelectTipList">
+                                        <option v-for="(tag, index) in avaliableTagsExactlyYes" class="tagSelectTip"> {{tag}} </option>
+                                        
+                                        <input type="submit">
+                                    </datalist> -->
+                                </div>
+                                <div class="listOfSelectedTags">
+                                    <div class="listOfSelectedTagsScrollBar">
+                                        <div v-for="(tag, index) in avaliableTagsExactlyYes" class="selectedTag"> 
+                                            <input type="checkbox" v-bind:id="tag" v-bind:value="tag" v-model="selectedTagsExactlyYes">
+                                            <label class="selectedTagLabel" v-bind:for="tag">{{tag}}</label>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                
+                            </div>
+                            <div class="tagInput">
+                                <div class="removeMargin single_line_inp ">
+                                    <div class="single_line_inp_txt">
+                                        Exactly no 
+                                    </div>
+                                    <!-- selectedTagsExactlyYes -->
+                                    
+                                    <!-- <input class="single_line_inp_edit" list="ExactlyNoTags" autocomplete="on">
+                                    <datalist id="ExactlyNoTags" class="tagSelectTipList">
+                                        <option v-for="(tag, index) in avaliableTagsExactlyNo" class="tagSelectTip"> {{tag}} </option>
+                                    
+                                        <input type="submit">
+                                    </datalist> -->
+                                </div>
+                                <div class="listOfSelectedTags">
+                                    <div class="listOfSelectedTagsScrollBar">
+                                        <div v-for="(tag, index) in avaliableTagsExactlyNo" class="selectedTag"> 
+                                            <input class="" type="checkbox" v-bind:id="tag" v-bind:value="tag" v-model="selectedTagsExactlyNo">
+                                            <label class="selectedTagLabel" v-bind:for="tag">{{tag}}</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            <div class="BlockWithControlButtons removeMarginBottom">
+                                <button class="funcBtn" v-on:click="tryToSearch">Find</button>
+                                <button class="cancelBtn" v-on:click="tryToCancel">Cancel</button>
+                                <!-- editingRouteList.splice(editingRouteList.find((element) => element.id === item.id), 1) -->
+                            </div>
+                            
+                        </div>
+                        
+                        <div class="searchResultList">
+                            <div v-if="searchRoutesResult['userRoutes'].length === 0 && searchRoutesResult['autogeneratedRoutes'].length === 0" class="searchResultTitle">
+                                Just choose what interests you
+                            </div>
+                            <div v-if="searchRoutesResult['userRoutes'].length !== 0" class="searchResultTitle">
+                                User routes
+                            </div>
+                            
+                            
+                            <div v-for="(item, index) in searchRoutesResult['userRoutes']" class="searchResult">
+                                <div class="imagesView">
+                                    <div class="scroll-container">
+                                        <img src="/images/image1.jpg" alt="Cinque Terre">
+                                        <img src="/images/image2.jpg" alt="Forest">
+                                        <img src="/images/image3.jpg" alt="Northern Lights">
+                                        <!-- <img src="/images/image1.jpg" alt="Mountains"> -->
+                                      </div>
+                                </div>
+                                <div class="searchResultDescription">
+                                    <div class="descriptionTitle">
+                                        {{ item.name }}
+                                    </div>
+                                    <button class="save_btn" v-on:click="showedRoute = item; getShowedRouteList();">view info</button>
+                                    <!-- <div class="durationResult">
+                                        Duration
+                                    </div> -->
+                                    <div class="statisticResult">
+                                        10% longer than the direct route
+                                        <br>
+                                        50% more interesting than the direct route
+                                    </div>
+                                    <div class="routeTags">
+
+                                    </div>
+                                    
+                                </div>
+                                <div class="controlBtbs">
+                                    <div class="funcBtns">
+                                        <button class="funcBtn">
+                                            Start
+                                        </button>
+                                    </div>
+                                    <div class="evaluativeBtns">
+                                        <button class="save_btn">
+                                            Like
+                                        </button>
+                                        <button class="cancel_btn">
+                                            Dislike
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div v-if="searchRoutesResult['autogeneratedRoutes'].length !== 0" class="searchResultTitle">
+                                Autogeneration routes
+                            </div>
+                            <div v-for="(item, index) in searchRoutesResult['autogeneratedRoutes']" class="searchResult">
+                                <div class="imagesView">
+                                    <div class="scroll-container">
+                                        <img src="/images/image1.jpg" alt="Cinque Terre">
+                                        <img src="/images/image2.jpg" alt="Forest">
+                                        <img src="/images/image3.jpg" alt="Northern Lights">
+                                        <!-- <img src="/images/image1.jpg" alt="Mountains"> -->
+                                      </div>
+                                </div>
+                                <div v-on:click="showedRouteId = item.id"  class="searchResultDescription">
+                                    <div class="descriptionTitle">
+                                        {{ item.name }}
+                                    </div>
+                                    <button class="save_btn" v-on:click="showedRoute = item; getShowedRouteList();">view info</button>
+
+                                    <!-- <div class="durationResult">
+                                        Duration
+                                    </div> -->
+                                    <div class="statisticResult">
+                                        10% longer than the direct route
+                                        <br>
+                                        50% more interesting than the direct route
+                                    </div>
+                                    <div class="routeTags">
+
+                                    </div>
+                                    
+                                </div>
+                                <div class="controlBtbs">
+                                    <div class="funcBtns">
+                                        <button class="funcBtn">
+                                            Start
+                                        </button>
+                                    </div>
+                                    <div class="evaluativeBtns">
+                                        <button class="save_btn">
+                                            Like
+                                        </button>
+                                        <button class="cancel_btn">
+                                            Dislike
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div v-else-if="currentPage === 2">
+                    <div class="content_label">
+                        Navigation along the selected route
+                    </div>
+                    <div class="content_block">
+                        <div class="targetList">
+                            <div class="searchResultTitle">
+                                Next target
+                            </div>
+                            <div v-for="(item, index) in [1]" class="target">
+                                <div class="imagesView">
+                                    <div class="scroll-container">
+                                        <img src="/images/image1.jpg" alt="Cinque Terre">
+                                        <img src="/images/image2.jpg" alt="Forest">
+                                        <img src="/images/image3.jpg" alt="Northern Lights">
+                                        <!-- <img src="/images/image1.jpg" alt="Mountains"> -->
+                                      </div>
+                                </div>
+                                <div class="targetDescription">
+                                    <div class="targetTitle">
+                                        Name {{item}}
+                                    </div>
+                                    <div class="targetAddress">
+                                        Address: {{item}}
+                                    </div>
+                                    
+                                </div>
+                                
+                            </div>
+                            <div class="searchResultTitle">
+                                Upcoming targets
+                            </div>
+                            <div v-for="(item, index) in [2, 3]" class="target">
+                                <div class="imagesView">
+                                    <div class="scroll-container">
+                                        <img src="/images/image1.jpg" alt="Cinque Terre">
+                                        <img src="/images/image2.jpg" alt="Forest">
+                                        <img src="/images/image3.jpg" alt="Northern Lights">
+                                        <!-- <img src="/images/image1.jpg" alt="Mountains"> -->
+                                      </div>
+                                </div>
+                                <div class="targetDescription">
+                                    <div class="targetTitle">
+                                        Name {{item}}
+                                    </div>
+                                    <div class="targetAddress">
+                                        Address: {{item}}
+                                    </div>
+                                    
+                                </div>
+                                
+                            </div>
+                            <div class="searchResultTitle">
+                                Passed targets
+                            </div>
+                            <div v-for="(item, index) in [4, 5]" class="target">
+                                <div class="imagesView">
+                                    <div class="scroll-container">
+                                        <img src="/images/image1.jpg" alt="Cinque Terre">
+                                        <img src="/images/image2.jpg" alt="Forest">
+                                        <img src="/images/image3.jpg" alt="Northern Lights">
+                                        <!-- <img src="/images/image1.jpg" alt="Mountains"> -->
+                                      </div>
+                                </div>
+                                <div class="targetDescription">
+                                    <div class="targetTitle">
+                                        Name {{item}}
+                                    </div>
+                                    <div class="targetAddress">
+                                        Address: {{item}}
+                                    </div>
+                                    
+                                </div>
+                                
+                            </div>
+                        </div>
+                        <div class="mapArea">
+                            <div class="mapHolder">
+                                <div id="demoMap" class="map"></div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+
+
+                </div>
+                <div v-else-if="currentPage === 3">
+                    
+                    
+                    <div class="placeOrRouteSwitcher">
+                        <button v-on:click="addPlace=1; addRoute=0" v-bind:class="[addPlace ? 'SwitchBtnActive':'SwitchBtn']">
+                            Place
+                        </button>
+                        <button v-on:click="addPlace=0; addRoute=1" v-bind:class="[addRoute ? 'SwitchBtnActive':'SwitchBtn']">
+                            Route
+                        </button>
+                    </div>
+                    <div v-if="addPlace">  
+                        <div class="content_label">
+                            Add new place
+                        </div>
+                        <div class="content_block">
+                            
+                            <div class="parametersList">
+                                <div class="frame_with_inputs_label">
+                                    Route parametres
+                                </div>
+                                <div class="single_line_inp">
+                                    <div class="single_line_inp_txt">
+                                        parameter1
+                                    </div>
+                                    <input class="single_line_inp_edit">
+                                </div>
+                                <div class="single_line_inp">
+                                    <div class="single_line_inp_txt">
+                                        parameter2
+                                    </div>
+                                    <input class="single_line_inp_edit">
+                                </div>
+                                <div class="single_line_inp">
+                                    <div class="single_line_inp_txt">
+                                        parameter3
+                                    </div>
+                                    <input class="single_line_inp_edit">
+                                </div>
+                                <div class="single_line_inp">
+                                    <div class="single_line_inp_txt">
+                                        parameter4
+                                    </div>
+                                    <input class="single_line_inp_edit">
+                                </div>
+                                <div class="single_line_inp">
+                                    <div class="single_line_inp_txt">
+                                        parameter5
+                                    </div>
+                                    <input class="single_line_inp_edit">
+                                </div>
+                                <div class="frame_with_inputs_label">
+                                    Preferences
+                                </div>
+                                <div class="single_line_inp">
+                                    <div class="single_line_inp_txt">
+                                        parameter1
+                                    </div>
+                                    <input class="single_line_inp_edit">
+                                </div>
+                                <div class="single_line_inp">
+                                    <div class="single_line_inp_txt">
+                                        parameter2
+                                    </div>
+                                    <input class="single_line_inp_edit">
+                                </div>
+                            </div>
+                            <div class="addNewPlaceMap">
+                                <div class="mapHolder">
+                                    <div id="demoMap" class="map"></div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div v-if="addRoute">
+                        <div class="content_label">
+                            Add new route
+                        </div>
+                        <div class="content_block">
+                            
+                            <div class="editRouteBlock">
+                                <div class="frame_with_inputs_label">
+                                    List of places
+                                </div>
+                                <div v-if="editingRouteList.length === 0" class="editingRouteListPlaceholder">
+                                    <div class="editingRouteListTipHeader">
+                                        Time to create :)
+                                    </div>
+                                    <div class="editingRouteListTip">
+                                        Just select interesting places on map
+                                    </div>
+                                </div>
+                                <div v-for="(item, index) in editingRouteList" class="editRouteOnePoint">
+                                    <!-- <div class="target">     -->
+                                    <div class="editRouteOnePointImagesView">
+                                        <div class="scroll-container">
+                                            <img src="/images/image1.jpg" alt="Cinque Terre">
+                                            <img src="/images/image2.jpg" alt="Forest">
+                                            <img src="/images/image3.jpg" alt="Northern Lights">
+                                            <!-- <img src="/images/image1.jpg" alt="Mountains"> -->
+                                        </div>
+                                    </div>
+                                    <div class="targetDescription editRouteOnePointDescription" >
+                                        <div class="targetTitle">
+                                            {{item.name}}
+                                        </div>
+                                        <div class="targetAddress ">
+                                            Address: {{item.lon}} {{item.lat}}
+                                        </div>
+                                        <div class="BlockWithControlButtons">
+                                            <button class="funcBtn" v-on:click="swapTwoPlacesInEditingRouteList(index, index - 1)">Up</button>
+                                            <button class="funcBtn" v-on:click="swapTwoPlacesInEditingRouteList(index + 1, index)">Down</button>
+                                            <button class="deleteBtn" v-on:click="editingRouteList.splice(index, 1)">Delete</button>
+                                            <!-- editingRouteList.splice(editingRouteList.find((element) => element.id === item.id), 1) -->
+                                        </div>
+                                        
+                                    </div>
+                                    <!-- </div> -->
+                                </div>
+                                <div class="frame_with_inputs_label">
+                                    Description
+                                </div>
+                                <div class="single_line_inp">
+                                    <div class="single_line_inp_txt">
+                                        Name
+                                    </div>
+                                    <input class="single_line_inp_edit" placeholder="Name" v-model="editRouteName">
+                                </div>
+                                <div class="single_line_inp">
+                                    
+                                    <textarea v-model="editRouteDescription" type="text" class="multilineInput" placeholder="Write description here"></textarea>
+                                </div>
+                                <div v-if="editingRouteList.length !== 0" class="BlockWithControlButtons removeMarginBottom">
+                                    <button class="funcBtn" v-on:click="tryToSaveRoute">Save</button>
+                                    <button class="cancelBtn" v-on:click="deleteEditing">Cancel</button>
+                                    <!-- editingRouteList.splice(editingRouteList.find((element) => element.id === item.id), 1) -->
+                                </div>
+                            </div>
+                            <div class="addNewRouteMap">
+                                <div class="addNewRoutemapHolder">
+                                    <div id="demoMap" class="map"></div>
+                                </div>
+                                <div class="underAddNewRouteMapBox">
+                                    <div class="selectedPointOnMap" v-if='selectedOnRouteEditMapSight !== ""' >
+                                        <div class="editRouteOnePoint">
+                                            <!-- <div class="target">     -->
+                                            <div class="editRouteOnePointImagesView">
+                                                <div class="scroll-container">
+                                                    <img src="/images/image1.jpg" alt="Cinque Terre">
+                                                    <img src="/images/image2.jpg" alt="Forest">
+                                                    <img src="/images/image3.jpg" alt="Northern Lights">
+                                                    <!-- <img src="/images/image1.jpg" alt="Mountains"> -->
+                                                </div>
+                                            </div>
+                                            <div class="targetDescription editRouteOnePointDescription" >
+                                                <div class="targetTitle">
+                                                    {{ selectedOnRouteEditMapSight.name }}
+                                                </div>
+                                                <div class="targetAddress ">
+                                                    Address: {{ selectedOnRouteEditMapSight.lon }} {{ selectedOnRouteEditMapSight.lat }}
+
+                                                </div>
+                                                <div class="BlockWithAddBtn">
+                                                    <button class="funcBtn" v-on:click="editingRouteList.push(selectedOnRouteEditMapSight);selectedOnRouteEditMapSight=''">Add to route</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            
+                        </div>
+                    </div>
+                </div>
+                <div v-else-if="currentPage === 4">
+                    <div class="profile">
+                            <div class="profileImageArea">
+                                <img src="/images/image1.jpg" alt="Cinque Terre" class="profileImage">
+                            </div>
+                            <div class="profileInfo">
+                                <div class="profileUsername">
+                                    {{ currentUser.firstName }} {{ currentUser.lastName }}
+                                </div>
+                                <div class="profileAddress">
+                                    {{ currentUser.address }}
+                                </div>
+                                <div>
+                                    <button class="editProfileBtn">Edit profile</button>
+                                </div>
+                                <div>
+                                    <button class="cancel_btn" v-on:click="logout">Log out</button>
+                                </div>
+                            </div>
+                            
+                        
+                    </div>
+                    <div class="content_label">
+                        My posts
+                    </div>
+                    <div class="content_block">
+                        <div class="leftColumn">
+                            <div v-for="(item, index) in newsListLeft" v-bind:class="[index==0 ? 'newsShort':'news']">
+                                
+                                <!-- class="news" -->
+                                <!-- {{ item.description }} -->
+                                <!-- <div v-if="index==0">
+
+                                </div> -->
+                                <div v-if="item.type==='topic'" class="newsTopic">
+                                    <div class="topicTitle">
+                                        {{ item.title }}
+                                    </div>
+                                    <div class="topicDescription">
+                                        {{ item.description }}
+                                    </div>
+                                    <div class="">
+                                        <button>view all...</button>
+                                    </div>
+                                </div>
+                                <div v-if="item.type!=='topic'" v-bind:class="[index==0 ? 'newsNotTopicShort':'newsNotTopic']">
+                                    <div v-bind:class="[index==0 ? 'newsImagesViewShort':'newsImagesView']">
+                                        <div class="newsScrollContainer">
+                                            <img src="/images/image1.jpg" alt="Cinque Terre">
+                                            <img src="/images/image2.jpg" alt="Forest">
+                                            <img src="/images/image3.jpg" alt="Northern Lights">
+                                            <!-- <img src="/images/image1.jpg" alt="Mountains"> -->
+                                        </div>
+
+                                            
+                                        
+                                    </div>
+                                    <div class="topicInfo">    
+                                        <div class="topicTitle">
+                                            {{ item.title }}
+                                        </div>
+                                        <div class="topicDescription">
+                                            {{ item.description }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="rightColumn">
+                            <div v-for="(item, index) in newsListLeft" class="news">
+                                
+                                <!-- class="news" -->
+                                <!-- {{ item.description }} -->
+                                <!-- <div v-if="index==0">
+
+                                </div> -->
+                                <div v-if="item.type==='topic'" class="newsTopic">
+                                    <div class="topicTitle">
+                                        {{ item.title }}
+                                    </div>
+                                    <div class="topicDescription">
+                                        {{ item.description }}
+                                    </div>
+                                    <div class="">
+                                        <button>view all...</button>
+                                    </div>
+                                </div>
+                                <div v-if="item.type!=='topic'" class="newsNotTopic">
+                                    <div class="newsImagesView'">
+                                        <div class="newsScrollContainer">
+                                            <img src="/images/image1.jpg" alt="Cinque Terre">
+                                            <img src="/images/image2.jpg" alt="Forest">
+                                            <img src="/images/image3.jpg" alt="Northern Lights">
+                                            <!-- <img src="/images/image1.jpg" alt="Mountains"> -->
+                                        </div>
+
+                                            
+                                        
+                                    </div>
+                                    <div class="topicInfo">    
+                                        <div class="topicTitle">
+                                            {{ item.title }}
+                                        </div>
+                                        <div class="topicDescription">
+                                            {{ item.description }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                            
+                        
+                    </div>
+                    
+                    
+                </div>
+            </div>
+
+        </div>
+        <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+        <script src="app.js"></script>
+
+
+        <script src="OpenLayers/OpenLayers.js"></script>
+
+
+        <script>
+            // map = new OpenLayers.Map("demoMap");
+            // map.addLayer(new OpenLayers.Layer.OSM());
+            // map.zoomToMaxExtent();
+        </script>
+    </body>
+</html>

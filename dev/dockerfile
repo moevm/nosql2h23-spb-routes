@@ -1,0 +1,20 @@
+FROM python:3.10.7
+
+RUN pip install neo4j fastapi fastapi-login python-multipart uvicorn
+
+ADD /server /server
+ADD /client/pages /client/pages
+ADD /client/static /client/static
+ADD /client/static/images /client/static/images
+ADD /client/static/OpenLayers /client/static/OpenLayers
+
+
+
+
+
+
+EXPOSE 3000
+
+WORKDIR /server/
+
+CMD ["python", "server.py"]
