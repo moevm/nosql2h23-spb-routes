@@ -212,33 +212,36 @@ class DataBaseDriver:
         
 
     @staticmethod  
-    def _generate_routes_by_start_and_finish_point(tx, startPoint, endPoint, stringWithTags):
+    def _generate_routes_by_start_and_finish_point(tx, startPoint, endPoint, stringWithTags, body):
         print('startPoint[id]', startPoint['id'])
         print('endPoint[id]', endPoint['id'])
         query = "MATCH (p:Sight {id: '"+startPoint['id']+"'})\
                 MATCH (joe:Sight {id: '"+endPoint['id']+"'})\
                 CALL apoc.path.expandConfig(p, {\
                     relationshipFilter: 'FOOT_ROUTE',\
+                    labelFilter: "+stringWithTags+",\
                     minLevel: 1,\
-                    maxLevel: 3,\
+                    maxLevel: "+str(body["numberOfSightsOnTheRoute"])+",\
                     terminatorNodes: [joe]\
                 })\
                 YIELD path\
-                RETURN path, length(path) AS hops\
+                RETURN nodes(path), length(path) AS hops\
                 ORDER BY hops\
-                LIMIT 1"
+                LIMIT 3"
         
-                    # labelFilter: '+biographical_museums',\
         result = tx.run(query)
+        # print(dict(result))
+        print()
         values = [record.values() for record in result]
-        return values
+        return [{"sightsSubsequenceIds" : [dict(node)['id'] for node in routes[0] ], "name" : routes[1]} for routes in values]
+
         # return [{"nodes" : [dict(nodes) for nodes in paths.values()[0]],
         #           "relationships" : [dict(arrow) for arrow in paths.values()[1]], 
         #           "length": paths.values()[2]} for paths in result]
 
-    def generateRoutesByStartAndFinishPoint(self, startPoint, endPoint, stringWithTags):
+    def generateRoutesByStartAndFinishPoint(self, startPoint, endPoint, stringWithTags, body):
         with self.driver.session() as session:
-            values = session.execute_read(self._generate_routes_by_start_and_finish_point, startPoint, endPoint, stringWithTags)
+            values = session.execute_read(self._generate_routes_by_start_and_finish_point, startPoint, endPoint, stringWithTags, body)
             return values
         
 
@@ -302,15 +305,55 @@ class DataBaseDriver:
             return values
         
     
+    @staticmethod  
+    def _check_if_users_exist(tx):
+        query = "match (n:User) return n"
+        result = tx.run(query)
+        # values = [record.values() for record in result]
+        # return values
+        return result.value()
 
+    def checkIfUsersExist(self):
+        with self.driver.session() as session:
+            values = session.execute_read(self._check_if_users_exist)
+            return values
+
+
+    @staticmethod
+    def _create_Default_User(tx):
+        query = ('CREATE (:User {email : "user@gmail.com",password : "2301",firstName : "Andrew",lastName : "Zlobin",phone : "89530595753",address : "Saint Petersburg"})')
+        result = tx.run(query,)
+        
+        return result
+    
+    def createDefaultUser(self):
+        with self.driver.session() as session:
+            # greeting = session.execute_write(self._create_and_return_greeting, message)
+            nodeName = session.execute_write(self._create_Default_User)
+            return nodeName
+    
+    @staticmethod
+    def _create_Default_Admin(tx):
+        query = ('CREATE (:User:Admin {email : "admin@gmail.com",password : "2301",firstName : "Andrew",lastName : "Admin",phone : "89530595753",address : "Saint Petersburg"})')
+        result = tx.run(query)
+        
+        return result
+    
+    def createDefaultAdmin(self):
+        with self.driver.session() as session:
+            # greeting = session.execute_write(self._create_and_return_greeting, message)
+            nodeName = session.execute_write(self._create_Default_Admin)
+            return nodeName
+
+    
 
 if __name__ == "__main__":
-    loader = DataBaseDriver("bolt://localhost:7687", "neo4j", "Andrew_07072002")
+    loader = DataBaseDriver("bolt://0.0.0.0:7687", "neo4j", "Andrew_07072002")
     f = open('data.json')
     data = json.load(f)
 
-    createNodes = True
-    createRoutes = True
+    createNodes = False
+    createRoutes = False
 
 
     if createNodes:
@@ -349,6 +392,7 @@ if __name__ == "__main__":
 
         print('success')
 
+    print(loader.checkIfUsersExist() == [])
 
     loader.close()
     f.close()

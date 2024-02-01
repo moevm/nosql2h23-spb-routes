@@ -9,7 +9,7 @@ const App = {
             title: "список заметок",
             inputValue: "",
 
-            numberOfSightsOnTheRoute : 5,
+            numberOfSightsOnTheRoute : 3,
             showMapToSelectStartPosition : false,
             showMapToSelectEndPosition : false,
 

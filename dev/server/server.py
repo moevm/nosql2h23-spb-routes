@@ -3,7 +3,7 @@ from fastapi import FastAPI, Depends, Request, Response, status, Body
 from starlette.responses import RedirectResponse, HTMLResponse, JSONResponse
 from fastapi_login import *
 
-from pydantic import BaseModel
+# from pydantic import BaseModel
 
 from fastapi import Depends
 from fastapi.security import OAuth2PasswordRequestForm
@@ -39,6 +39,8 @@ manager = LoginManager(SECRET, token_url='/auth/token', custom_exception=NotAuth
 fake_db = ServerLogic()# {'drdrew': {'password': '2301'}}
 
 
+if fake_db.checkIfUsersExist() == []:
+    fake_db.createDefaultUsers()
 
 
 pages_path = directory=os.path.abspath(os.path.join( os.path.dirname(__file__), '..', 'client', 'pages'))
@@ -240,4 +242,4 @@ app.mount("/", StaticFiles(directory=os.path.abspath(os.path.join( os.path.dirna
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="127.0.0.1", port=3333)
+    uvicorn.run(app, host="0.0.0.0", port=3333)
