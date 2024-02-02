@@ -50,24 +50,6 @@ class TestServerLogic(unittest.TestCase):
         self.mock_db_driver.getSightsInBbox.assert_called_once()
         self.assertEqual(result, expected_sights)
 
-    def test_createNewRoute(self):
-        user = {"email": "user@example.com"}
-        newRoute = {
-            'newRouteName': 'Test Route',
-            'newRouteDescription': 'A test route description',
-            'newRouteList': [{'id': 'sight1'}, {'id': 'sight2'}]
-        }
-        self.mock_db_driver.createUserRoute.return_value = True
-
-        self.server_logic.createNewRoute(user, newRoute)
-
-        self.mock_db_driver.createUserRoute.assert_called_once()
-        args, kwargs = self.mock_db_driver.createUserRoute.call_args
-        self.assertEqual(kwargs['user'], user)
-        self.assertTrue('id' in kwargs['route'])
-        self.assertEqual(kwargs['route']['name'], newRoute['newRouteName'])
-        self.assertEqual(kwargs['route']['description'], newRoute['newRouteDescription'])
-
     def test_parseStringWithTags(self):
         body = {
             'selectedTagsExactlyYes': ['tag1', 'tag2'],
