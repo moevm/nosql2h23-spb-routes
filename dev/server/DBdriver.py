@@ -344,6 +344,32 @@ class DataBaseDriver:
             # greeting = session.execute_write(self._create_and_return_greeting, message)
             nodeName = session.execute_write(self._create_Default_Admin)
             return nodeName
+        
+    def createTaggedSightNode(self, node, tags):
+        with self.driver.session() as session:
+            nodeName = session.execute_write(self._create_tagged_sight_return_name, node, tags)
+            return nodeName
+
+    @staticmethod
+    def _create_tagged_sight_return_name(tx, node, tags):
+        labelString = ':'.join(['Sight'] + [tag for tag in tags])  
+        query = (
+            f"CREATE (node{node['id']}:{labelString} "
+            "{type: $type, id: $id, lon: $lon, lat: $lat, name: $name, rate: $rate, "
+            "properties: $properties, kinds: $kinds, lat: $lat}) "
+            f"RETURN node{node['id']}.name AS nodeName"
+        )
+        result = tx.run(query,
+                        type=node['type'],
+                        id=node['id'],
+                        lon=node['geometry']['coordinates'][0],
+                        lat=node['geometry']['coordinates'][1],
+                        name=node['properties']['name'],
+                        rate=node['properties']['rate'],
+                        properties=str(node['properties']),
+                        kinds=node['properties']['kinds'])
+        record = result.single()
+        return record['nodeName'] if record else None
 
     
 
